@@ -46,6 +46,7 @@ class Publisher(models.Model):
     description = models.TextField(unique=True)
     country = models.CharField(max_length=100)
     capitalization = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    image = models.ImageField(upload_to="publisher_images", blank=True, null=True)
 
     class Meta:
         ordering = ["capitalization"]

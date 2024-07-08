@@ -37,3 +37,9 @@ class GenreListView(ListView):
     model = Genre
     context_object_name = "genre_list"
     template_name = "game/genre_list.html"
+
+
+class PublisherListView(ListView):
+    model = Publisher
+    context_object_name = "publisher_list"
+    template_name = "game/publisher_list.html"
