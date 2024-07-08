@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="game-detail">
+    <div class="game-header">
+      <h1>{{ game.title }}</h1>
+      <img src="{{ game.image.url }}" alt="{{ game.title }}" width="300" height="150">
+    </div>
+    <div class="game-info">
+      <p><strong>Genre:</strong> {{ game.genre.name }}</p>
+      <p><strong>Release Year:</strong> {{ game.release_year }}</p>
+      <p>{{ game.description }}</p>
+    </div>
+    <!-- Uncomment below to add delete and update buttons -->
+    <div class="game-actions">
+{#      <a href="{% url 'taxi:car-delete' pk=car.id %}" class="btn btn-danger">Delete</a>#}
+{#      <a href="{% url 'taxi:car-update' pk=car.id %}" class="btn btn-secondary">Update</a>#}
+{#    </div> #}
+  </div>
+{% endblock %}

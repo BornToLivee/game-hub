@@ -1,7 +1,9 @@
+from django.contrib.auth import login
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView
 
+from game.forms import PlayerRegistrationForm
 from game.models import Player, Game, Publisher, Genre
 
 
@@ -27,6 +29,18 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "game/index.html", context=context)
 
 
+def register(request):
+    if request.method == "POST":
+        form = PlayerRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("/")
+    else:
+        form = PlayerRegistrationForm()
+    return render(request, "registration/register.html", {"form": form})
+
+
 class GameListView(ListView):
     model = Game
     context_object_name = "game_list"
@@ -43,3 +57,9 @@ class PublisherListView(ListView):
     model = Publisher
     context_object_name = "publisher_list"
     template_name = "game/publisher_list.html"
+
+
+class GameDetailView(DetailView):
+    model = Game
+    template_name = "game/game_detail.html"
+
