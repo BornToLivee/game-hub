@@ -1,5 +1,6 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+from django.views.generic import ListView
 
 from game.models import Player, Game, Publisher, Genre
 
@@ -24,3 +25,15 @@ def index(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, "game/index.html", context=context)
+
+
+class GameListView(ListView):
+    model = Game
+    context_object_name = "game_list"
+    template_name = "game/game_list.html"
+
+
+class GenreListView(ListView):
+    model = Genre
+    context_object_name = "genre_list"
+    template_name = "game/genre_list.html"

@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1>Your personal game hub</h1>
 <p>Welcome to Hub!</p>
 <p>The Hub service has the following record counts:</p>
@@ -11,3 +15,5 @@
 <p>You have visited this page
   {{ num_visits }} time{{ num_visits|pluralize }}.
 </p>
+
+{% endblock %}
