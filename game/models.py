@@ -58,6 +58,8 @@ class Publisher(models.Model):
 class Player(AbstractUser):
     email = models.EmailField(unique=True, null=True, blank=True)
     age = models.IntegerField(null=True, blank=True)
+    wishlist_games = models.ManyToManyField(Game, related_name="wishlisted_by", blank=True)
+    completed_games = models.ManyToManyField(Game, related_name="completed_by", blank=True)
 
     class Meta:
         verbose_name = "Player"

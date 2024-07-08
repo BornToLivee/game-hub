@@ -1,6 +1,6 @@
 from django.contrib.auth import login
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 
 from game.forms import PlayerRegistrationForm
@@ -39,6 +39,38 @@ def register(request):
     else:
         form = PlayerRegistrationForm()
     return render(request, "registration/register.html", {"form": form})
+
+
+def update_wishlist_status(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    player = request.user
+
+    if game in player.wishlist_games.all():
+        player.wishlist_games.remove(game)
+    else:
+        player.wishlist_games.add(game)
+    return redirect('game:game-detail', pk=game_id)
+
+
+def update_completed_status(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    player = request.user
+
+    if game in player.completed_games.all():
+        player.completed_games.remove(game)
+    else:
+        player.completed_games.add(game)
+    return redirect('game:game-detail', pk=game_id)
+
+
+def personal_page(request):
+    wishlist_games = request.user.wishlist_games.all()
+    completed_games = request.user.completed_games.all()
+    context = {
+        'wishlist_games': wishlist_games,
+        'completed_games': completed_games,
+    }
+    return render(request, 'game/personal_page.html', context)
 
 
 class GameListView(ListView):
