@@ -2,7 +2,7 @@ from django.conf.urls.static import static
 from django.urls import path
 
 from game.views import index, GameListView, GenreListView, PublisherListView,register, personal_page, \
-    update_wishlist_status, update_completed_status, game_detail, GameCreateView, GameUpdateView
+    update_wishlist_status, update_completed_status, game_detail, GameCreateView, GameUpdateView, GenreDetailView
 from game_hub import settings
 
 urlpatterns = [
@@ -12,6 +12,7 @@ urlpatterns = [
     path("games/create/", GameCreateView.as_view(), name="game-create"),
     path("games/<int:pk>/update/",  GameUpdateView.as_view(), name="game-update"),
     path("genres/", GenreListView.as_view(), name="genre-list"),
+    path("ganres/<int:pk>/", GenreDetailView.as_view(), name="genre-detail"),
     path("publishers/", PublisherListView.as_view(), name="publisher-list"),
     path("register/", register, name="register"),
     path('update_wishlist_status/<int:game_id>/', update_wishlist_status, name='update-wishlist-status'),

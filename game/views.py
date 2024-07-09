@@ -77,7 +77,7 @@ def personal_page(request):
 
 class GameListView(ListView):
     model = Game
-    paginate_by = 1
+    paginate_by = 5
     queryset = Game.objects.select_related("genre", "publisher")
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -112,12 +112,21 @@ class GameUpdateView(UpdateView):
 
 class GenreListView(ListView):
     model = Genre
-    paginate_by = 1
+
+
+class GenreDetailView(DetailView):
+    model = Genre
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        genre = self.object
+        context['games'] = Game.objects.filter(genre_id=genre.pk)
+        return context
 
 
 class PublisherListView(ListView):
     model = Publisher
-    paginate_by = 1
+    paginate_by = 5
 
 
 def game_detail(request, pk):

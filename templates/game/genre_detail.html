@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ object.name }}</h1>
+  <p>{{ object.description }}</p>
+
+  <h2>Games in this genre:</h2>
+  <ul>
+    {% for game in games %}
+      <li>
+        <a href="{% url 'game:game-detail' pk=game.pk %}">{{ game.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
