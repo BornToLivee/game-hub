@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load crispy_forms_filters %}
 
 {% block content %}
 
   <h1>
     Game list
-    {#    <a href="{% url 'taxi:car-create' %}" class="btn btn-primary link-to-page">#}
-    {#      Create#}
-    {#    </a>#}
+    <a href="{% url 'game:game-create' %}" class="btn btn-primary link-to-page">
+      Create
+    </a>
   </h1>
-  {#    <form action="" method="get" class="form-inline">#}
-  {#    {{ search_form|crispy }}#}
-  {#    <input type="submit" value="➔" class="btn btn-info">#}
-  {#  </form>#}
+  <form action="" method="get" class="form-inline">
+    {{ search_form|crispy }}
+    <input type="submit" value="➔" class="btn btn-info">
+  </form>
   {% if game_list %}
     <ul>
       {% for game in game_list %}

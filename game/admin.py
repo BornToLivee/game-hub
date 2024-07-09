@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Genre, Game, Publisher, Player
+from .models import Genre, Game, Publisher, Player, Platform
 
 
 @admin.register(Player)
@@ -39,3 +39,5 @@ class PublisherAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Genre)
+
+admin.site.register(Platform)

@@ -2,18 +2,19 @@
 {% load static %}
 
 {% block title %}
-  <title>{{ game.title }} - Детали игры</title>
+  <title>{{ game.title }} - Game details</title>
 {% endblock %}
 
 {% block content %}
   <div class="container mt-5">
     <h1>{{ game.title }}</h1>
+    <a href="{% url 'game:game-update' game.id %}">Update information about game</a>
     <img src="{{ game.image.url }}" alt="{{ game.title }}" class="img-fluid" style="max-width: 300px; height: auto;">
-    <p>Жанр: {{ game.genre.name }}, Год выпуска: {{ game.release_year }}</p>
+    <p>Genre: {{ game.genre.name }}, Release year: {{ game.release_year }}</p>
     <p>{{ game.description }}</p>
 
     <div>
-      <h4>Средний рейтинг пользователей:</h4>
+      <h4>Average players rating:</h4>
       <div id="average-rating">
         {% for i in range %}
           {% if i < average_rating %}
@@ -27,7 +28,7 @@
 
     {% if user.is_authenticated %}
       <div>
-        <h4>Ваша оценка:</h4>
+        <h4>Your score:</h4>
         <div id="user-rating" data-score="{{ user_rating.score|default:0 }}">
           {% for i in range %}
             {% if i < user_rating.score %}
@@ -41,11 +42,31 @@
       <form method="post" id="rating-form">
         {% csrf_token %}
         <input type="hidden" name="score" id="rating-score">
-        <button type="submit" class="btn btn-primary mt-3">Отправить оценку</button>
+        <button type="submit" class="btn btn-primary mt-3" value="Submit"></button>
       </form>
     {% else %}
-      <p>Чтобы оценить эту игру, вам необходимо войти в систему.</p>
+      <p>Only registered users can leave ratings </p>
     {% endif %}
+    <form method="post" action="{% url 'game:update-wishlist-status' game.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary">
+        {% if game in user.wishlist_games.all %}
+          Remove from wishlist
+        {% else %}
+          Add to wishlist
+        {% endif %}
+      </button>
+    </form>
+    <form method="post" action="{% url 'game:update-completed-status' game.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success">
+        {% if game in user.completed_games.all %}
+          Remove from completed
+        {% else %}
+          Completed
+        {% endif %}
+      </button>
+    </form>
   </div>
   <script src="{% static 'js/rating.js' %}"></script>
 {% endblock %}

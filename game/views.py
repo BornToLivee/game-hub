@@ -2,9 +2,10 @@ from django.contrib.auth import login
 from django.db.models import Avg
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
-from game.forms import PlayerRegistrationForm, RatingForm
+from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm
 from game.models import Player, Game, Publisher, Genre, Rating
 
 
@@ -76,20 +77,47 @@ def personal_page(request):
 
 class GameListView(ListView):
     model = Game
-    context_object_name = "game_list"
-    template_name = "game/game_list.html"
+    paginate_by = 1
+    queryset = Game.objects.select_related("genre", "publisher")
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        title = self.request.GET.get("title", "")
+        context = super(GameListView, self).get_context_data(**kwargs)
+        context["search_form"] = (
+            GameSearchForm(initial={"title": title})
+        )
+        return context
+
+    def get_queryset(self):
+        queryset = Game.objects.all()
+        title = self.request.GET.get("title")
+        if title:
+            queryset = Game.objects.filter(title__icontains=title)
+        return queryset
+
+
+class GameCreateView(CreateView):
+    model = Game
+    form_class = GameForm
+    success_url = reverse_lazy("game:game-list")
+
+
+class GameUpdateView(UpdateView):
+    model = Game
+    form_class = GameForm
+
+    def get_success_url(self):
+        return reverse("game:game-detail", kwargs={"pk": self.object.pk})
 
 
 class GenreListView(ListView):
     model = Genre
-    context_object_name = "genre_list"
-    template_name = "game/genre_list.html"
+    paginate_by = 1
 
 
 class PublisherListView(ListView):
     model = Publisher
-    context_object_name = "publisher_list"
-    template_name = "game/publisher_list.html"
+    paginate_by = 1
 
 
 def game_detail(request, pk):
@@ -118,5 +146,5 @@ def game_detail(request, pk):
         'average_rating': average_rating,
         'user_rating': user_rating,
         'form': form,
-        'range': range_list,  # Pass the range list to the template
+        'range': range_list,
     })

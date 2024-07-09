@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Player
+from .models import Player, Game, Platform
 from .models import Rating
 
 
@@ -11,6 +11,26 @@ class RatingForm(forms.ModelForm):
         widgets = {
             'score': forms.NumberInput(attrs={'min': 1, 'max': 10}),
         }
+
+
+class GameForm(forms.ModelForm):
+    platforms = forms.ModelMultipleChoiceField(
+        queryset=Platform.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+    )
+
+    class Meta:
+        model = Game
+        fields = ("title", "description", "release_year", "platforms", "genre", "publisher", "image", "link",)
+
+
+class GameSearchForm(forms.Form):
+    model = forms.CharField(
+        max_length=255,
+        required=False,
+        label="",
+        widget=forms.TextInput(attrs={"placeholder": "Search by title"}),
+    )
 
 
 class PlayerRegistrationForm(UserCreationForm):
