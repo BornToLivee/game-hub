@@ -31,6 +31,24 @@ class Game(models.Model):
     def __str__(self):
         return self.title
 
+    def get_average_rating(self):
+        ratings = self.ratings.all()
+        if ratings.exists():
+            return sum(rating.score for rating in ratings) / ratings.count()
+        return 0
+
+
+class Rating(models.Model):
+    player = models.ForeignKey("Player", on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='ratings')
+    score = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ('player', 'game')
+
+    def __str__(self):
+        return f'{self.player.username} - {self.game.title} - {self.score}'
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)

@@ -1,10 +1,11 @@
 from django.contrib.auth import login
-from django.http import HttpRequest, HttpResponse
+from django.db.models import Avg
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 
-from game.forms import PlayerRegistrationForm
-from game.models import Player, Game, Publisher, Genre
+from game.forms import PlayerRegistrationForm, RatingForm
+from game.models import Player, Game, Publisher, Genre, Rating
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -91,7 +92,31 @@ class PublisherListView(ListView):
     template_name = "game/publisher_list.html"
 
 
-class GameDetailView(DetailView):
-    model = Game
-    template_name = "game/game_detail.html"
+def game_detail(request, pk):
+    game = get_object_or_404(Game, pk=pk)
+    average_rating = Rating.objects.filter(game=game).aggregate(Avg('score'))['score__avg'] or 0
+    user_rating = None
+    if request.user.is_authenticated:
+        user_rating = Rating.objects.filter(game=game, player=request.user).first()
 
+    range_list = range(1, 11)
+
+    if request.method == "POST":
+        form = RatingForm(request.POST)
+        if form.is_valid():
+            rating, created = Rating.objects.update_or_create(
+                player=request.user,
+                game=game,
+                defaults={'score': form.cleaned_data['score']}
+            )
+            return redirect('game:game-detail', pk=pk)
+    else:
+        form = RatingForm()
+
+    return render(request, 'game/game_detail.html', {
+        'game': game,
+        'average_rating': average_rating,
+        'user_rating': user_rating,
+        'form': form,
+        'range': range_list,  # Pass the range list to the template
+    })
