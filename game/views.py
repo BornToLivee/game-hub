@@ -80,20 +80,33 @@ class GameListView(ListView):
     paginate_by = 5
     queryset = Game.objects.select_related("genre", "publisher")
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        title = self.request.GET.get("title", "")
-        context = super(GameListView, self).get_context_data(**kwargs)
-        context["search_form"] = (
-            GameSearchForm(initial={"title": title})
-        )
-        return context
-
     def get_queryset(self):
-        queryset = Game.objects.all()
-        title = self.request.GET.get("title")
+        queryset = super().get_queryset()
+        title = self.request.GET.get("title", "")
+        genre_id = self.request.GET.get("genre")
+        publisher_id = self.request.GET.get("publisher")
+
         if title:
-            queryset = Game.objects.filter(title__icontains=title)
+            queryset = queryset.filter(title__icontains=title)
+        if genre_id:
+            queryset = queryset.filter(genre__id=genre_id)
+        if publisher_id:
+            queryset = queryset.filter(publisher__id=publisher_id)
+
         return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = self.request.GET.get("title", "")
+        genre_id = self.request.GET.get("genre")
+        publisher_id = self.request.GET.get("publisher")
+
+        context["search_form"] = GameSearchForm(initial={"title": title})
+        context["genres"] = Genre.objects.all()
+        context["publishers"] = Publisher.objects.all()
+        context["selected_genre"] = genre_id
+        context["selected_publisher"] = publisher_id
+        return context
 
 
 class GameCreateView(CreateView):
@@ -127,6 +140,17 @@ class GenreDetailView(DetailView):
 class PublisherListView(ListView):
     model = Publisher
     paginate_by = 5
+
+
+class PublisherDetailView(DetailView):
+    model = Publisher
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        publisher = self.object
+        context['games'] = Game.objects.filter(publisher_id=publisher.pk)
+        return context
+
 
 
 def game_detail(request, pk):
