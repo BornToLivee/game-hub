@@ -1,8 +1,9 @@
 from django.contrib.auth import login
 from django.db.models import Avg
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm
@@ -139,7 +140,24 @@ class GenreDetailView(DetailView):
 
 class PublisherListView(ListView):
     model = Publisher
-    paginate_by = 5
+    template_name = 'game/publisher_list.html'
+    context_object_name = 'publisher_list'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        country = self.request.GET.get('country')
+
+        if country:
+            queryset = queryset.filter(country=country)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['countries'] = Publisher.objects.values_list('country', flat=True).distinct()
+        context['selected_country'] = self.request.GET.get('country', '')
+        return context
 
 
 class PublisherDetailView(DetailView):
@@ -181,3 +199,20 @@ def game_detail(request, pk):
         'form': form,
         'range': range_list,
     })
+
+
+def about(request: HttpRequest) -> HttpResponse:
+    text = "Hi, I'm the author of this cute little gaming site. My name is Bohdan, I'm 23 years old, and I'm a beginner Python developer. If you liked it and want to invite me to work, write to me by email. Thanks for stopping by, have a nice day!"
+    email = "bogdan.zinchenko.2019@gmail.com"
+    github_account = "https://github.com/BornToLivee"
+    return render(request, "game/about.html", {
+        'text': text,
+        'email': email,
+        'github_account': github_account
+    })
+
+
+class RandomGameView(View):
+    def get(self, request, *args, **kwargs):
+        random_game = Game.objects.order_by('?').first()
+        return redirect('game:game-detail', pk=random_game.pk)

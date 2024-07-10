@@ -2,18 +2,33 @@
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Personal Page</h2>
-    <h3>Wishlist</h3>
-    <ul>
-        {% for game in wishlist_games %}
-            <li>{{ game.title }}</li>
-        {% endfor %}
-    </ul>
-    <h3>Completed Games</h3>
-    <ul>
-        {% for game in completed_games %}
-            <li>{{ game.title }}</li>
-        {% endfor %}
-    </ul>
+    <h2 class="mb-4">Personal Page</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="wishlist">
+                <h3 class="mb-3">Wishlist</h3>
+                <ul class="list-group">
+                    {% for game in wishlist_games %}
+                        <li class="list-group-item">{{ game.title }}</li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">No games in wishlist</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="completed-games">
+                <h3 class="mb-3">Completed Games</h3>
+                <ul class="list-group">
+                    {% for game in completed_games %}
+                        <li class="list-group-item">{{ game.title }}</li>
+                    {% empty %}
+                        <li class="list-group-item text-muted">No completed games yet</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

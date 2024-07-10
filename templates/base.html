@@ -13,7 +13,6 @@
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 
-<body>
 {% block header %}
   {% include "includes/header.html" %}
 {% endblock %}
@@ -29,19 +28,3 @@
       {% block pagination %}
         {% include "includes/pagination.html" %}
       {% endblock %}
-    </div>
-  </div>
-</div>
-
-<!-- jQuery -->
-<script
-    src="https://code.jquery.com/jquery-3.6.0.js"
-    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-    crossorigin="anonymous">
-</script>
-<script src="{% static 'js/rating.js' %}"></script>
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-</body>
-
-</html>

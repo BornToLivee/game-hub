@@ -25,7 +25,7 @@ class GameForm(forms.ModelForm):
 
 
 class GameSearchForm(forms.Form):
-    model = forms.CharField(
+    title = forms.CharField(
         max_length=255,
         required=False,
         label="",

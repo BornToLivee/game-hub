@@ -1,26 +1,43 @@
-{#    <a href="{% url 'taxi:car-create' %}" class="btn btn-primary link-to-page">#}
-{#      Create#}
-{#    </a>#}
-{#  </h1>#}
-{#    <form action="" method="get" class="form-inline">#}
-{#    {{ search_form|crispy }}#}
-{#    <input type="submit" value="➔" class="btn btn-info">#}
-{#  </form>#}
 {% extends "base.html" %}
 
 {% block content %}
   <h1>Publishers</h1>
-  <ul>
+
+  <!-- Filter Form -->
+  <form action="" method="get" class="form-inline mb-4">
+    <div class="form-group mr-3">
+      <label for="country" class="mr-2">Country:</label>
+      <select name="country" id="country" class="form-control">
+        <option value="">All</option>
+        {% for country in countries %}
+          <option value="{{ country }}" {% if selected_country == country %}selected{% endif %}>{{ country }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </form>
+
+  <ul class="list-unstyled">
     {% for publisher in publisher_list %}
-      <li>
-        <a href="{% url "game:publisher-detail" pk=publisher.id %}"> {{ publisher.name }}</a>
-        {% if publisher.image %}
-          <img src="{{ publisher.image.url }}" alt="{{ publisher.name }} Image" width="100" height="100">
-        {% else %}
-          <p>No image available</p>
-        {% endif %}
-        <p>{{ publisher.description }}</p>
+      <li class="mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-3">
+            <a href="{% url "game:publisher-detail" pk=publisher.id %}">
+              {% if publisher.image %}
+                <img src="{{ publisher.image.url }}" alt="{{ publisher.name }} Image" class="img-fluid rounded">
+              {% else %}
+                <p>No image available</p>
+              {% endif %}
+            </a>
+          </div>
+          <div class="col-md-9">
+            <h4>{{ publisher.name }}</h4>
+            <p>{{ publisher.description }}</p>
+          </div>
+        </div>
       </li>
+    {% empty %}
+      <p>No publishers found.</p>
     {% endfor %}
   </ul>
 {% endblock %}

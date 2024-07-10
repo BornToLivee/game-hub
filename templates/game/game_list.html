@@ -22,7 +22,8 @@
       <select name="genre" id="genre" class="form-control">
         <option value="">All</option>
         {% for genre in genres %}
-          <option value="{{ genre.id }}" {% if selected_genre == genre.id|stringformat:"s" %}selected{% endif %}>{{ genre.name }}</option>
+          <option value="{{ genre.id }}"
+                  {% if selected_genre == genre.id|stringformat:"s" %}selected{% endif %}>{{ genre.name }}</option>
         {% endfor %}
       </select>
     </div>
@@ -31,7 +32,8 @@
       <select name="publisher" id="publisher" class="form-control">
         <option value="">All</option>
         {% for publisher in publishers %}
-          <option value="{{ publisher.id }}" {% if selected_publisher == publisher.id|stringformat:"s" %}selected{% endif %}>{{ publisher.name }}</option>
+          <option value="{{ publisher.id }}"
+                  {% if selected_publisher == publisher.id|stringformat:"s" %}selected{% endif %}>{{ publisher.name }}</option>
         {% endfor %}
       </select>
     </div>
@@ -43,10 +45,12 @@
     {% for game in game_list %}
       <div class="col-md-4 mb-4">
         <div class="card">
-          <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}" style="height: 200px; object-fit: cover;">
+          <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}"
+               style="height: 300px; object-fit: cover;">
           <div class="card-body">
-            <h5 class="card-title">{{ game.title }}</h5>
-            <a href="{% url 'game:game-detail' pk=game.id %}" class="btn btn-primary">View Game</a>
+            <h5 class="card-title mb-0">{{ game.title }}</h5>
+            <span class="text-muted">{{ game.release_year }}</span>
+            <a href="{% url 'game:game-detail' pk=game.id %}"></a>
           </div>
         </div>
       </div>
@@ -57,4 +61,26 @@
     {% endfor %}
   </div>
 
+  <script>
+      // Handle clicking on game card to view details
+      document.querySelectorAll('.card').forEach(card => {
+          card.addEventListener('click', function () {
+              const url = this.querySelector('a').getAttribute('href');
+              window.location.href = url;
+          });
+      });
+
+      // Handle image zoom effect on hover
+      document.querySelectorAll('.card-img-top').forEach(image => {
+          image.addEventListener('mouseenter', function () {
+              this.style.transform = 'scale(1.1)';
+              this.style.transition = 'transform 0.3s';
+          });
+
+          image.addEventListener('mouseleave', function () {
+              this.style.transform = 'scale(1)';
+              this.style.transition = 'transform 0.3s';
+          });
+      });
+  </script>
 {% endblock %}
