@@ -1,0 +1,62 @@
+.background-animation {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  background: #ffffff;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.container-fluid {
+  height: 100%;
+  margin-top: 56px; /* Высота navbar */
+}
+
+.sidebar-wrapper {
+  height: calc(100% - 56px);
+  position: fixed;
+  top: 56px;
+  left: 0;
+  background-color: #f8f9fa;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.sidebar-nav {
+  padding-top: 20px;
+}
+
+.sidebar-nav .list-group-item {
+  border: none;
+  padding: 15px 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar-nav .list-group-item:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.sidebar-nav .list-group-item a {
+  color: #333;
+  text-decoration: none;
+  width: 100%;
+  display: block;
+}
+
+.sidebar-nav .list-group-item a:hover {
+  color: white;
+}
