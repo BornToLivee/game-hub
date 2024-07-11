@@ -78,7 +78,7 @@ def personal_page(request):
 
 class GameListView(ListView):
     model = Game
-    paginate_by = 5
+    paginate_by = 6
     queryset = Game.objects.select_related("genre", "publisher")
 
     def get_queryset(self):
@@ -170,13 +170,14 @@ class PublisherDetailView(DetailView):
         return context
 
 
-
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk)
     average_rating = Rating.objects.filter(game=game).aggregate(Avg('score'))['score__avg'] or 0
     user_rating = None
     if request.user.is_authenticated:
         user_rating = Rating.objects.filter(game=game, player=request.user).first()
+
+    user_votes_count = Rating.objects.filter(game=game).values('player').distinct().count()
 
     range_list = range(1, 11)
 
@@ -198,6 +199,7 @@ def game_detail(request, pk):
         'user_rating': user_rating,
         'form': form,
         'range': range_list,
+        "user_votes_count": user_votes_count,
     })
 
 

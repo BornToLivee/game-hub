@@ -1,44 +1,29 @@
-// static/js/rating.js
+document.addEventListener('DOMContentLoaded', function() {
+  const userRating = document.getElementById('user-rating');
+  const stars = userRating.querySelectorAll('i');
+  const ratingScore = document.getElementById('rating-score');
+  const userScore = parseInt(userRating.getAttribute('data-score')) || 0;
 
-$(document).ready(function(){
-    var userScore = parseInt($('#user-rating').data('score'));
-    $('#user-rating i').each(function(){
-        var ratingValue = $(this).data('value');
-        if(ratingValue <= userScore){
-            $(this).removeClass('far').addClass('fas');
+  stars.forEach((star, index) => {
+    if (index < userScore) {
+      star.classList.add('fas');
+    } else {
+      star.classList.add('far');
+    }
+
+    star.addEventListener('click', function() {
+      const rating = parseInt(this.getAttribute('data-value'));
+      ratingScore.value = rating;
+
+      stars.forEach((s, i) => {
+        if (i < rating) {
+          s.classList.remove('far');
+          s.classList.add('fas');
+        } else {
+          s.classList.remove('fas');
+          s.classList.add('far');
         }
+      });
     });
-
-    $('#user-rating i').on('click', function(){
-        var ratingValue = $(this).data('value');
-        $('#rating-score').val(ratingValue);
-        $('#user-rating i').each(function(){
-            var starValue = $(this).data('value');
-            if(starValue <= ratingValue){
-                $(this).removeClass('far').addClass('fas');
-            } else {
-                $(this).removeClass('fas').addClass('far');
-            }
-        });
-    });
-
-    $('#rating-form').on('submit', function(e){
-        e.preventDefault();
-        var score = $('#rating-score').val();
-        $.ajax({
-            url: window.location.href,
-            method: "POST",
-            data: {
-                'csrfmiddlewaretoken': $("input[name='csrfmiddlewaretoken']").val(),
-                'score': score
-            },
-            success: function(response){
-                alert('Rating submitted successfully!');
-                location.reload();
-            },
-            error: function(response){
-                alert('An error occurred. Please try again.');
-            }
-        });
-    });
+  });
 });

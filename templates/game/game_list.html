@@ -2,11 +2,9 @@
 {% load crispy_forms_filters %}
 
 {% block content %}
-  <h1 class="mb-4">Game List</h1>
-
-  <!-- Create Game Button -->
-  <div class="mb-4">
-    <a href="{% url 'game:game-create' %}" class="btn btn-primary">Create Game</a>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Game List</h1>
+    <a href="{% url 'game:game-create' %}" class="btn btn-primary">Add new game</a>
   </div>
 
   <!-- Search Form -->
@@ -56,7 +54,7 @@
       </div>
     {% empty %}
       <div class="col-md-12">
-        <p>No games found.</p>
+        <a href="{% url 'game:game-create' %}">Can't find your game in the list? Add it to the website!</a>
       </div>
     {% endfor %}
   </div>
