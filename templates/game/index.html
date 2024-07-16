@@ -1,19 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h1>Your personal game hub</h1>
-<p>Welcome to Hub!</p>
-<p>The Hub service has the following record counts:</p>
-<ul>
-  <li><strong>Players:</strong> {{ num_players }}</li>
-  <li><strong>Games:</strong> {{ num_games }}</li>
-  <li><strong>Genres:</strong> {{ num_genres }}</li>
-  <li><strong>Publishers:</strong> {{ num_publishers }}</li>
-</ul>
-
-<p>You have visited this page
-  {{ num_visits }} time{{ num_visits|pluralize }}.
-</p>
-
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Your Personal Game Hub</h1>
+    <p class="text-center">Welcome to Hub!</p>
+    <div class="row text-center justify-content-center">
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:personal-page' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Players</h3>
+            <p class="display-4">{{ num_players }}+</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:game-list' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Games</h3>
+            <p class="display-4">{{ num_games }}+</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:genre-list' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Genres</h3>
+            <p class="display-4">{{ num_genres }}+</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:publisher-list' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Publishers</h3>
+            <p class="display-4">{{ num_publishers }}+</p>
+          </div>
+        </a>
+      </div>
+    </div>
+    <p class="text-center">You have visited this page {{ num_visits }} time{{ num_visits|pluralize }}.</p>
+  </div>
 {% endblock %}
