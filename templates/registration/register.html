@@ -3,47 +3,61 @@
 {% load form_tags %}
 
 {% block content %}
-   <div class="container mt-5">
-       <h2 class="mb-3">Register</h2>
-       <form method="post" class="needs-validation" novalidate>
-           {% csrf_token %}
-           <div class="form-group">
-               {{ form.username.label_tag }}
-               {{ form.username|add_class:"form-control" }}
-               <div class="invalid-feedback">
-                   Please provide a valid username.
-               </div>
-           </div>
-           <div class="form-group">
-               {{ form.email.label_tag }}
-               {{ form.email|add_class:"form-control" }}
-               <div class="invalid-feedback">
-                   Please provide a valid email address.
-               </div>
-           </div>
-           <div class="form-group">
-               {{ form.age.label_tag }}
-               {{ form.age|add_class:"form-control" }}
-               <div class="invalid-feedback">
-                   Please provide your age.
-               </div>
-           </div>
-           <div class="form-group">
-               {{ form.password1.label_tag }}
-               {{ form.password1|add_class:"form-control" }}
-               <div class="invalid-feedback">
-                   Please provide a valid password.
-               </div>
-           </div>
-           <div class="form-group">
-               {{ form.password2.label_tag }}
-               {{ form.password2|add_class:"form-control" }}
-               <div class="invalid-feedback">
-                   Please confirm your password.
-               </div>
-           </div>
-           <button type="submit" class="btn btn-primary">Register</button>
-       </form>
-   </div>
+  <div class="container mt-5">
+    <h2 class="mb-3">Register</h2>
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      <div class="form-group">
+        {{ form.username.label_tag }}
+        {{ form.username|add_class:"form-control" }}
+        <div class="invalid-feedback">
+          Please provide a valid username.
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.email.label_tag }}
+        {{ form.email|add_class:"form-control" }}
+        <div class="invalid-feedback">
+          Please provide a valid email address.
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.age.label_tag }}
+        {{ form.age|add_class:"form-control" }}
+        <div class="invalid-feedback">
+          Please provide your age.
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name|add_class:"form-control" }}
+        <div class="invalid-feedback">
+          Please provide your first name.
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name|add_class:"form-control" }}
+        <div class="invalid-feedback">
+          Please provide your last name.
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.password1.label_tag }}
+        {{ form.password1|add_class:"form-control" }}
+        <div class="invalid-feedback">
+          Please provide a valid password.
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form.password2.label_tag }}
+        {{ form.password2|add_class:"form-control" }}
+        <div class="invalid-feedback">
+          Please confirm your password.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+  </div>
 {% endblock %}
 
