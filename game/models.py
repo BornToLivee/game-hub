@@ -1,13 +1,13 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from datetime import date
 
 
 class Game(models.Model):
     title = models.CharField(max_length=100, unique=True)
     description = models.TextField(unique=True)
     release_year = models.IntegerField()
-    genre = models.ForeignKey("Genre", on_delete=models.DO_NOTHING)
+    genre = models.ForeignKey("Genre", on_delete=models.CASCADE)
     platform = models.ManyToManyField("Platform", related_name="games", blank=True)
     publisher = models.ForeignKey("Publisher", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="game_images")
@@ -71,14 +71,20 @@ class Publisher(models.Model):
 
 class Player(AbstractUser):
     email = models.EmailField(unique=True, null=True, blank=True)
-    age = models.IntegerField(null=True, blank=True, validators=[
-            MinValueValidator(5, message="Age must be 5 or older."),
-            MaxValueValidator(100, message="Age cannot be more than 100."),
-        ])
+    date_of_birth = models.DateField(null=True, blank=True)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     wishlist_games = models.ManyToManyField(Game, related_name="wishlisted_by", blank=True)
     completed_games = models.ManyToManyField(Game, related_name="completed_by", blank=True)
+
+    @property
+    def age(self):
+        if self.date_of_birth:
+            today = date.today()
+            age = today.year - self.date_of_birth.year - ((today.month, today.day)
+                                                          < (self.date_of_birth.month, self.date_of_birth.day))
+            return age
+        return None
 
     class Meta:
         verbose_name = "Player"

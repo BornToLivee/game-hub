@@ -2,13 +2,21 @@
 {% load static %}
 
 {% block content %}
-  <h1>Genre List</h1>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Genres</h1>
+    <a href="{% url 'game:genre-create' %}" class="btn btn-primary">Add new genre</a>
+  </div>
+
 
   <div class="row">
     {% for genre in genre_list %}
       <div class="col-md-3 mb-4">
         <div class="card genre-card" data-url="{% url 'game:genre-detail' pk=genre.id %}">
-          <img class="genre-card-img"  src="{{ genre.image.url }}" alt="{{ genre.name }}">
+          {% if genre.image %}
+            <img class="genre-card-img" src="{{ genre.image.url }}" alt="{{ genre.name }}">
+          {% else %}
+            <img class="genre-card-img" src="{% static 'images/default.jpg' %}" alt="Default Image">
+          {% endif %}
           <div class="card-body">
             <h5 class="card-title">{{ genre.name }}</h5>
           </div>
@@ -20,8 +28,8 @@
   {% if genre_list|length == 0 %}
     <p>There are no genres in the library.</p>
   {% endif %}
-{% block extra_head %}
-  <link rel="stylesheet" href="{% static 'css/genre_cards.css' %}">
-{% endblock %}
+  {% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/genre_cards.css' %}">
+  {% endblock %}
   <script src="{% static 'js/genre_cards.js' %}"></script>
 {% endblock %}

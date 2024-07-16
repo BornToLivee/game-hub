@@ -6,9 +6,9 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm, PlayerUpdateForm
+from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm, PlayerUpdateForm, GenreCreateForm
 from game.models import Player, Game, Publisher, Genre, Rating
 
 
@@ -162,6 +162,27 @@ class GenreDetailView(DetailView):
         genre = self.object
         context['games'] = Game.objects.filter(genre_id=genre.pk)
         return context
+
+
+class GenreCreateView(CreateView):
+    model = Genre
+    form_class = GenreCreateForm
+    template_name = "game/genre_create_form.html"
+    success_url = reverse_lazy("game:genre-list")
+
+
+class GenresUpdateView(UpdateView):
+    model = Genre
+    form_class = GenreCreateForm
+    template_name = "game/genre_create_form.html"
+
+    def get_success_url(self):
+        return reverse("game:genre-detail", kwargs={"pk": self.object.pk})
+
+
+class GenreDeleteView(DeleteView):
+    model = Genre
+    success_url = reverse_lazy("game:genre-list")
 
 
 class PublisherListView(ListView):

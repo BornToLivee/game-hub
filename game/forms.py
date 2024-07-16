@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import DateInput
 
-from .models import Player, Game, Platform
+from .models import Player, Game, Platform, Genre
 from .models import Rating
 
 
@@ -50,3 +50,9 @@ class PlayerUpdateForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = ['first_name', 'last_name', 'date_of_birth']
+
+
+class GenreCreateForm(forms.ModelForm):
+    class Meta:
+        model = Genre
+        fields = "__all__"

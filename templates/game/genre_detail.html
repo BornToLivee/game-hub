@@ -12,4 +12,6 @@
       </li>
     {% endfor %}
   </ul>
+  <a href="{% url 'game:genre-update' pk=genre.id %}" class="btn btn-warning btn-block btn-animated">Update information about genre</a>
+  <a href="{% url 'game:genre-delete' pk=genre.id %}" class="btn btn-warning btn-block btn-animated">Delete genre</a>
 {% endblock %}
