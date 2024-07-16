@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.forms import DateInput
+
 from .models import Player, Game, Platform
 from .models import Rating
 
@@ -35,16 +37,16 @@ class GameSearchForm(forms.Form):
 
 class PlayerRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=False)
-    age = forms.IntegerField(required=False)
+    date_of_birth = forms.DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
 
     class Meta:
         model = Player
-        fields = ["username", "email", "age", "first_name", "last_name", "password1", "password2",]
+        fields = ["username", "email", "date_of_birth", "first_name", "last_name", "password1", "password2",]
 
 
 class PlayerUpdateForm(forms.ModelForm):
     class Meta:
         model = Player
-        fields = ['first_name', 'last_name', 'age']
+        fields = ['first_name', 'last_name', 'date_of_birth']
