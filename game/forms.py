@@ -34,7 +34,7 @@ class GameSearchForm(forms.Form):
 
 
 class PlayerRegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=False)
     age = forms.IntegerField(required=False)
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
