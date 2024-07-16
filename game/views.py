@@ -1,4 +1,6 @@
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db.models import Avg
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -6,7 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
-from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm
+from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm, PlayerUpdateForm
 from game.models import Player, Game, Publisher, Genre, Rating
 
 
@@ -44,6 +46,17 @@ def register(request):
     return render(request, "registration/register.html", {"form": form})
 
 
+def player_update(request):
+    if request.method == 'POST':
+        form = PlayerUpdateForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('game:personal-page')
+    else:
+        form = PlayerUpdateForm(instance=request.user)
+    return render(request, 'game/player_update.html', {'form': form})
+
+
 def update_wishlist_status(request, game_id):
     game = get_object_or_404(Game, id=game_id)
     player = request.user
@@ -69,10 +82,23 @@ def update_completed_status(request, game_id):
 def personal_page(request):
     wishlist_games = request.user.wishlist_games.all()
     completed_games = request.user.completed_games.all()
+
+    wishlist_paginator = Paginator(wishlist_games, 5)  # 5 игр на страницу
+    completed_paginator = Paginator(completed_games, 5)
+
+    wishlist_page_number = request.GET.get('wishlist_page')
+    completed_page_number = request.GET.get('completed_page')
+
+    wishlist_page_obj = wishlist_paginator.get_page(wishlist_page_number)
+    completed_page_obj = completed_paginator.get_page(completed_page_number)
+
     context = {
-        'wishlist_games': wishlist_games,
-        'completed_games': completed_games,
+        'wishlist_games': wishlist_page_obj,
+        'completed_games': completed_page_obj,
+        'is_wishlist_paginated': wishlist_paginator.num_pages > 1,
+        'is_completed_paginated': completed_paginator.num_pages > 1,
     }
+
     return render(request, 'game/personal_page.html', context)
 
 

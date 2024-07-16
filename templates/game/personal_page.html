@@ -1,34 +1,93 @@
 {% extends "base.html" %}
+{% load query_transform %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">Personal Page</h2>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center title" >Personal Page</h2>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="wishlist">
-                <h3 class="mb-3">Wishlist</h3>
-                <ul class="list-group">
-                    {% for game in wishlist_games %}
-                        <li class="list-group-item">{{ game.title }}</li>
-                    {% empty %}
-                        <li class="list-group-item text-muted">No games in wishlist</li>
-                    {% endfor %}
-                </ul>
-            </div>
+      <!-- User Information -->
+      <div class="col-md-12 mb-4">
+        <div class="user-info p-4 border rounded shadow-sm bg-light">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Your Profile</h3>
+            <a href="{% url 'game:player-update' %}" class="btn btn-outline-primary btn-sm">Update Information</a>
+          </div>
+          <div class="user-details">
+            <p><strong>First Name:</strong> {{ user.first_name|default:"Not provided" }}</p>
+            <p><strong>Last Name:</strong> {{ user.last_name|default:"Not provided" }}</p>
+            <p><strong>Age:</strong> {{ user.age|default:"Not provided" }}</p>
+            <p><strong>Date of Registration:</strong> {{ user.date_joined|date:"Y-m-d" }}</p>
+          </div>
         </div>
-        <div class="col-md-6">
-            <div class="completed-games">
-                <h3 class="mb-3">Completed Games</h3>
-                <ul class="list-group">
-                    {% for game in completed_games %}
-                        <li class="list-group-item">{{ game.title }}</li>
-                    {% empty %}
-                        <li class="list-group-item text-muted">No completed games yet</li>
-                    {% endfor %}
-                </ul>
-            </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="wishlist p-4 border rounded shadow-sm bg-light">
+          <h3 class="mb-3">Wishlist</h3>
+          <ul class="list-group">
+            {% for game in wishlist_games %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'game:game-detail' game.id %}">{{ game.title }}</a>
+                <span class="badge bg-primary rounded-pill">Wishlist</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">No games in wishlist</li>
+            {% endfor %}
+          </ul>
+          <!-- Пагинация для wishlist -->
+          {% if is_wishlist_paginated %}
+            <ul class="pagination mt-3">
+              {% if wishlist_games.has_previous %}
+                <li class="page-item"><a class="page-link"
+                                         href="?{% query_transform request wishlist_page=wishlist_games.previous_page_number %}">Prev</a>
+                </li>
+              {% endif %}
+              <li class="page-item active"><span
+                  class="page-link">{{ wishlist_games.number }} of {{ wishlist_games.paginator.num_pages }}</span></li>
+              {% if wishlist_games.has_next %}
+                <li class="page-item"><a class="page-link"
+                                         href="?{% query_transform request wishlist_page=wishlist_games.next_page_number %}">Next</a>
+                </li>
+              {% endif %}
+            </ul>
+          {% endif %}
         </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="completed-games p-4 border rounded shadow-sm bg-light">
+          <h3 class="mb-3">Completed Games</h3>
+          <ul class="list-group">
+            {% for game in completed_games %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'game:game-detail' game.id %}">{{ game.title }}</a>
+                <span class="badge bg-success rounded-pill">Completed</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item text-muted">No completed games yet</li>
+            {% endfor %}
+          </ul>
+          <!-- Пагинация для completed games -->
+          {% if is_completed_paginated %}
+            <ul class="pagination mt-3">
+              {% if completed_games.has_previous %}
+                <li class="page-item"><a class="page-link"
+                                         href="?{% query_transform request completed_page=completed_games.previous_page_number %}">Prev</a>
+                </li>
+              {% endif %}
+              <li class="page-item active"><span
+                  class="page-link">{{ completed_games.number }} of {{ completed_games.paginator.num_pages }}</span>
+              </li>
+              {% if completed_games.has_next %}
+                <li class="page-item"><a class="page-link"
+                                         href="?{% query_transform request completed_page=completed_games.next_page_number %}">Next</a>
+                </li>
+              {% endif %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

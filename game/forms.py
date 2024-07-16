@@ -14,14 +14,14 @@ class RatingForm(forms.ModelForm):
 
 
 class GameForm(forms.ModelForm):
-    platforms = forms.ModelMultipleChoiceField(
+    platform = forms.ModelMultipleChoiceField(
         queryset=Platform.objects.all(),
         widget=forms.CheckboxSelectMultiple,
     )
 
     class Meta:
         model = Game
-        fields = ("title", "description", "release_year", "platforms", "genre", "publisher", "image", "link",)
+        fields = ("title", "description", "platform", "release_year", "genre", "publisher", "image", "link",)
 
 
 class GameSearchForm(forms.Form):
@@ -36,7 +36,15 @@ class GameSearchForm(forms.Form):
 class PlayerRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=True)
     age = forms.IntegerField(required=False)
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
 
     class Meta:
         model = Player
-        fields = ["username", "email", "age", "password1", "password2"]
+        fields = ["username", "email", "age", "first_name", "last_name", "password1", "password2",]
+
+
+class PlayerUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        fields = ['first_name', 'last_name', 'age']
