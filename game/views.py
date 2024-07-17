@@ -2,7 +2,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 import json
 from django.core.paginator import Paginator
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -160,6 +160,12 @@ class GameDeleteView(DeleteView):
 
 class GenreListView(ListView):
     model = Genre
+    queryset = Genre.objects.annotate(num_games=Count('game'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['genre_list'] = self.get_queryset()
+        return context
 
 
 class GenreDetailView(DetailView):
@@ -213,7 +219,6 @@ class PublisherListView(ListView):
         countries = Publisher.objects.values_list('country', flat=True)
         unique_countries = list(set(countries))
         unique_countries.sort()
-
         context['countries'] = unique_countries
         context['selected_country'] = self.request.GET.get('country', '')
 
