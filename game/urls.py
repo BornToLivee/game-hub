@@ -1,16 +1,17 @@
 from django.conf.urls.static import static
 from django.urls import path
 
-from game.views import index, GameListView, GenreListView, PublisherListView, personal_page, \
-    update_wishlist_status, update_completed_status, game_detail, GameCreateView, GameUpdateView, GenreDetailView, \
-    PublisherDetailView, about, RandomGameView, player_update, GenreCreateView, GenresUpdateView, GenreDeleteView, \
-    PublisherCreateView, PublisherUpdateView, PublisherDeleteView, GameDeleteView, RegistrationView
+from game.views import GameListView, GenreListView, PublisherListView, \
+    update_wishlist_status, update_completed_status, GameCreateView, GameUpdateView, GenreDetailView, \
+    PublisherDetailView, RandomGameView, GenreCreateView, GenresUpdateView, GenreDeleteView, \
+    PublisherCreateView, PublisherUpdateView, PublisherDeleteView, GameDeleteView, RegistrationView, IndexView, \
+    PlayerUpdateView, PersonalPageView, GameDetailView, AboutView
 from game_hub import settings
 
 urlpatterns = [
-    path("", index, name="index"),
+    path("", IndexView.as_view(), name="index"),
     path("games/", GameListView.as_view(), name="game-list"),
-    path("games/<int:pk>/", game_detail, name="game-detail"),
+    path("games/<int:pk>/", GameDetailView.as_view(), name="game-detail"),
     path("games/create/", GameCreateView.as_view(), name="game-create"),
     path("games/<int:pk>/update/",  GameUpdateView.as_view(), name="game-update"),
     path("games/<int:pk>/delete/", GameDeleteView.as_view(), name="game-delete"),
@@ -27,9 +28,9 @@ urlpatterns = [
     path("register/", RegistrationView.as_view(), name="register"),
     path('update_wishlist_status/<int:game_id>/', update_wishlist_status, name='update-wishlist-status'),
     path('update_completed_status/<int:game_id>/', update_completed_status, name='update-completed-status'),
-    path('personal_page/', personal_page, name='personal-page'),
-    path('player/update/', player_update, name='player-update'),
-    path('about/', about, name='about-page'),
+    path('personal_page/', PersonalPageView.as_view(), name='personal-page'),
+    path('player/update/', PlayerUpdateView.as_view(), name='player-update'),
+    path('about/', AboutView.as_view(), name='about-page'),
     path('random/', RandomGameView.as_view(), name='random-game'),
 ]
 

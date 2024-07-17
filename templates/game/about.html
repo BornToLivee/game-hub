@@ -1,7 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <p>{{ text }}</p>
-  <a href="#">{{ email }}</a>
-  <a href="https://github.com/BornToLivee"> My GitHub account</a>
+  <div class="container mt-5">
+    <p>{{ text }}</p>
+    <div class="my-3">
+      <a href="#" id="copyEmail">{{ email }}</a> | <a href="https://github.com/BornToLivee">My GitHub account</a>
+      <p id="copyInfo" style="font-size: 0.8rem; color: #666; display: none;">Click to copy email</p>
+    </div>
+    <div id="copyNotification" class="alert alert-success mt-3" style="display: none;" role="alert">
+      Email copied to clipboard: <span id="copiedEmail">{{ email }}</span>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('copyEmail').addEventListener('click', function(event) {
+      event.preventDefault();
+      const el = document.createElement('textarea');
+      el.value = '{{ email }}';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+
+      const copyNotification = document.getElementById('copyNotification');
+      const copiedEmail = document.getElementById('copiedEmail');
+      copiedEmail.textContent = '{{ email }}';
+      copyNotification.style.display = 'block';
+
+      const copyInfo = document.getElementById('copyInfo');
+      copyInfo.style.display = 'inline-block';
+
+      setTimeout(function() {
+        copyNotification.style.display = 'none';
+        copyInfo.style.display = 'none';
+      }, 3000);
+    });
+  </script>
 {% endblock %}
