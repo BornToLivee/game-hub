@@ -158,7 +158,6 @@ class GameDeleteView(DeleteView):
     success_url = reverse_lazy("game:game-list")
 
 
-
 class GenreListView(ListView):
     model = Genre
 
@@ -211,10 +210,14 @@ class PublisherListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['countries'] = Publisher.objects.values_list('country', flat=True).distinct()
-        context['selected_country'] = self.request.GET.get('country', '')
-        return context
+        countries = Publisher.objects.values_list('country', flat=True)
+        unique_countries = list(set(countries))
+        unique_countries.sort()
 
+        context['countries'] = unique_countries
+        context['selected_country'] = self.request.GET.get('country', '')
+
+        return context
 
 class PublisherDetailView(DetailView):
     model = Publisher
