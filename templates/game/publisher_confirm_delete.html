@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card p-4">
+    <p class="text-center mb-4">Are you sure you want to delete publisher "{{ publisher.name }}"?</p>
+    <p class="text-center"><i>All games from this publisher also be deleted!</i></p>
+    <div class="d-flex justify-content-center">
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="btn-group">
+          <input type="submit" value="Yes" class="btn btn-danger mr-2" />
+          <a href="{% url 'game:publisher-detail' pk=publisher.id %}" class="btn btn-secondary">No</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -24,6 +24,13 @@
           {% if games|length == 0 %}
             <p class="text-muted">No games found.</p>
           {% endif %}
+          <div class="text-center">
+            <a href="{% url 'game:publisher-update' pk=publisher.id %}"
+               class="btn btn-warning btn-lg btn-block mb-2 btn-animated">Update
+              Information</a>
+            <a href="{% url 'game:publisher-delete' pk=publisher.id %}" class="btn btn-danger btn-lg btn-block btn-animated">Delete
+              Publisher</a>
+          </div>
         </div>
       </div>
     </div>
