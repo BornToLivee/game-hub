@@ -1,56 +1,44 @@
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 
 from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm, PlayerUpdateForm, GenreCreateForm, \
     PublisherCreateForm
 from game.models import Player, Game, Publisher, Genre, Rating
 
 
-def index(request: HttpRequest) -> HttpResponse:
-    """View function for the home page of the site."""
+class IndexView(TemplateView):
+    template_name = "game/index.html"
 
-    num_players = Player.objects.count()
-    num_games = Game.objects.count()
-    num_publishers = Publisher.objects.count()
-    num_genres = Genre.objects.count()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    num_visits = request.session.get("num_visits", 0)
-    request.session["num_visits"] = num_visits + 1
-
-    context = {
-        "num_players": num_players,
-        "num_games": num_games,
-        "num_publishers": num_publishers,
-        "num_genres": num_genres,
-        "num_visits": num_visits + 1,
-    }
-
-    return render(request, "game/index.html", context=context)
+        context['num_players'] = Player.objects.count()
+        context['num_games'] = Game.objects.count()
+        context['num_publishers'] = Publisher.objects.count()
+        context['num_genres'] = Genre.objects.count()
+        return context
 
 
-class RegistrationView(CreateView):
+class RegistrationView(LoginRequiredMixin, CreateView):
     form_class = PlayerRegistrationForm
     template_name = "registration/register.html"
     success_url = reverse_lazy("game:personal-page")
 
 
-def player_update(request):
-    if request.method == 'POST':
-        form = PlayerUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('game:personal-page')
-    else:
-        form = PlayerUpdateForm(instance=request.user)
-    return render(request, 'game/player_update.html', {'form': form})
+class PlayerUpdateView(LoginRequiredMixin, UpdateView):
+    model = Player
+    form_class = PlayerUpdateForm
+    template_name = 'game/player_update.html'
+    success_url = reverse_lazy('game:personal-page')
+
+    def get_object(self):
+        return self.request.user
 
 
 def update_wishlist_status(request, game_id):
@@ -75,27 +63,32 @@ def update_completed_status(request, game_id):
     return redirect('game:game-detail', pk=game_id)
 
 
-def personal_page(request):
-    wishlist_games = request.user.wishlist_games.all()
-    completed_games = request.user.completed_games.all()
+class PersonalPageView(LoginRequiredMixin, TemplateView):
+    template_name = 'game/personal_page.html'
 
-    wishlist_paginator = Paginator(wishlist_games, 5)  # 5 игр на страницу
-    completed_paginator = Paginator(completed_games, 5)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    wishlist_page_number = request.GET.get('wishlist_page')
-    completed_page_number = request.GET.get('completed_page')
+        wishlist_games = self.request.user.wishlist_games.all()
+        completed_games = self.request.user.completed_games.all()
 
-    wishlist_page_obj = wishlist_paginator.get_page(wishlist_page_number)
-    completed_page_obj = completed_paginator.get_page(completed_page_number)
+        wishlist_paginator = Paginator(wishlist_games, 5)
+        completed_paginator = Paginator(completed_games, 5)
 
-    context = {
-        'wishlist_games': wishlist_page_obj,
-        'completed_games': completed_page_obj,
-        'is_wishlist_paginated': wishlist_paginator.num_pages > 1,
-        'is_completed_paginated': completed_paginator.num_pages > 1,
-    }
+        wishlist_page_number = self.request.GET.get('wishlist_page')
+        completed_page_number = self.request.GET.get('completed_page')
 
-    return render(request, 'game/personal_page.html', context)
+        wishlist_page_obj = wishlist_paginator.get_page(wishlist_page_number)
+        completed_page_obj = completed_paginator.get_page(completed_page_number)
+
+        context.update({
+            'wishlist_games': wishlist_page_obj,
+            'completed_games': completed_page_obj,
+            'is_wishlist_paginated': wishlist_paginator.num_pages > 1,
+            'is_completed_paginated': completed_paginator.num_pages > 1,
+        })
+
+        return context
 
 
 class GameListView(ListView):
@@ -132,13 +125,13 @@ class GameListView(ListView):
         return context
 
 
-class GameCreateView(CreateView):
+class GameCreateView(LoginRequiredMixin, CreateView):
     model = Game
     form_class = GameForm
     success_url = reverse_lazy("game:game-list")
 
 
-class GameUpdateView(UpdateView):
+class GameUpdateView(LoginRequiredMixin, UpdateView):
     model = Game
     form_class = GameForm
 
@@ -146,7 +139,7 @@ class GameUpdateView(UpdateView):
         return reverse("game:game-detail", kwargs={"pk": self.object.pk})
 
 
-class GameDeleteView(DeleteView):
+class GameDeleteView(LoginRequiredMixin, DeleteView):
     model = Game
     success_url = reverse_lazy("game:game-list")
 
@@ -161,7 +154,7 @@ class GenreListView(ListView):
         return context
 
 
-class GenreDetailView(DetailView):
+class GenreDetailView(LoginRequiredMixin, DetailView):
     model = Genre
 
     def get_context_data(self, **kwargs):
@@ -171,14 +164,14 @@ class GenreDetailView(DetailView):
         return context
 
 
-class GenreCreateView(CreateView):
+class GenreCreateView(LoginRequiredMixin, CreateView):
     model = Genre
     form_class = GenreCreateForm
     template_name = "game/genre_create_form.html"
     success_url = reverse_lazy("game:genre-list")
 
 
-class GenresUpdateView(UpdateView):
+class GenresUpdateView(LoginRequiredMixin, UpdateView):
     model = Genre
     form_class = GenreCreateForm
     template_name = "game/genre_create_form.html"
@@ -187,7 +180,7 @@ class GenresUpdateView(UpdateView):
         return reverse("game:genre-detail", kwargs={"pk": self.object.pk})
 
 
-class GenreDeleteView(DeleteView):
+class GenreDeleteView(LoginRequiredMixin, DeleteView):
     model = Genre
     success_url = reverse_lazy("game:genre-list")
 
@@ -218,7 +211,7 @@ class PublisherListView(ListView):
         return context
 
 
-class PublisherDetailView(DetailView):
+class PublisherDetailView(LoginRequiredMixin, DetailView):
     model = Publisher
 
     def get_context_data(self, **kwargs):
@@ -228,37 +221,41 @@ class PublisherDetailView(DetailView):
         return context
 
 
-def game_detail(request, pk):
-    game = get_object_or_404(Game, pk=pk)
-    average_rating = Rating.objects.filter(game=game).aggregate(Avg('score'))['score__avg'] or 0
-    user_rating = None
-    if request.user.is_authenticated:
-        user_rating = Rating.objects.filter(game=game, player=request.user).first()
+class GameDetailView(LoginRequiredMixin, DetailView):
+    model = Game
+    template_name = 'game/game_detail.html'
+    context_object_name = 'game'
 
-    user_votes_count = Rating.objects.filter(game=game).values('player').distinct().count()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        game = self.get_object()
+        average_rating = Rating.objects.filter(game=game).aggregate(Avg('score'))['score__avg'] or 0
+        user_rating = None
+        if self.request.user.is_authenticated:
+            user_rating = Rating.objects.filter(game=game, player=self.request.user).first()
 
-    range_list = range(1, 11)
+        user_votes_count = Rating.objects.filter(game=game).values('player').distinct().count()
+        range_list = range(1, 11)
+        context.update({
+            'average_rating': average_rating,
+            'user_rating': user_rating,
+            'form': RatingForm(),
+            'range': range_list,
+            "user_votes_count": user_votes_count,
+        })
+        return context
 
-    if request.method == "POST":
+    def post(self, request, *args, **kwargs):
         form = RatingForm(request.POST)
+        game = self.get_object()
         if form.is_valid():
             rating, created = Rating.objects.update_or_create(
                 player=request.user,
                 game=game,
                 defaults={'score': form.cleaned_data['score']}
             )
-            return redirect('game:game-detail', pk=pk)
-    else:
-        form = RatingForm()
-
-    return render(request, 'game/game_detail.html', {
-        'game': game,
-        'average_rating': average_rating,
-        'user_rating': user_rating,
-        'form': form,
-        'range': range_list,
-        "user_votes_count": user_votes_count,
-    })
+            return redirect('game:game-detail', pk=game.pk)
+        return self.get(request, *args, **kwargs)
 
 
 class PublisherCreateView(CreateView):
@@ -279,19 +276,18 @@ class PublisherUpdateView(UpdateView):
 
 class PublisherDeleteView(DeleteView):
     model = Publisher
-    success_url = reverse_lazy("game:publisher-list.html")
+    success_url = reverse_lazy("game:publisher-list")
 
 
-def about(request: HttpRequest) -> HttpResponse:
-    text = "Hi, I'm the author of this cute little gaming site. My name is Bohdan, I'm 23 years old, and I'm a beginner Python developer. If you liked it and want to invite me to work, write to me by email. Thanks for stopping by, have a nice day!"
-    email = "bogdan.zinchenko.2019@gmail.com"
-    github_account = "https://github.com/BornToLivee"
-    return render(request, "game/about.html", {
-        'text': text,
-        'email': email,
-        'github_account': github_account
-    })
+class AboutView(TemplateView):
+    template_name = 'game/about.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['text'] = "Hi, I'm the author of this cute little gaming site. My name is Bohdan, I'm 23 years old, and I'm a beginner Python developer. If you liked it and want to invite me to work, write to me by email. Thanks for stopping by, have a nice day!"
+        context['email'] = "bogdan.zinchenko.2019@gmail.com"
+        context['github_account'] = "https://github.com/BornToLivee"
+        return context
 
 class RandomGameView(View):
     def get(self, request, *args, **kwargs):
