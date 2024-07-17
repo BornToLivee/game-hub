@@ -1,16 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-  <h1>{{ object.name }}</h1>
-  <h3>{{ object.description }}</h3>
-  <p>Country: {{ object.country }}</p>
+  <link rel="stylesheet" href="{% static 'css/publisher_detail.css' %}">
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <div class="card mb-4">
+          <div class="card-body">
+            <h1 class="card-title">{{ object.name }}</h1>
+            <p class="card-text">{{ object.description }}</p>
+            <p><strong>Country:</strong> {{ object.country }}</p>
+          </div>
+        </div>
 
-  <h2>Games from this company:</h2>
-  <ul>
-    {% for game in games %}
-      <li>
-        <a href="{% url 'game:game-detail' pk=game.pk %}">{{ game.title }}</a>
-      </li>
-    {% endfor %}
-  </ul>
+        <h2 class="mb-4">Games from this company:</h2>
+        <div class="list-group">
+          {% for game in games %}
+            <a href="{% url 'game:game-detail' pk=game.pk %}" class="list-group-item list-group-item-action">
+              {{ game.title }}
+            </a>
+          {% endfor %}
+          {% if games|length == 0 %}
+            <p class="text-muted">No games found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
