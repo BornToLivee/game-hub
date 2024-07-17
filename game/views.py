@@ -1,13 +1,12 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-import json
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from game.forms import PlayerRegistrationForm, RatingForm, GameSearchForm, GameForm, PlayerUpdateForm, GenreCreateForm, \
@@ -37,16 +36,10 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "game/index.html", context=context)
 
 
-def register(request):
-    if request.method == "POST":
-        form = PlayerRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect("/")
-    else:
-        form = PlayerRegistrationForm()
-    return render(request, "registration/register.html", {"form": form})
+class RegistrationView(CreateView):
+    form_class = PlayerRegistrationForm
+    template_name = "registration/register.html"
+    success_url = reverse_lazy("game:personal-page")
 
 
 def player_update(request):
@@ -223,6 +216,7 @@ class PublisherListView(ListView):
         context['selected_country'] = self.request.GET.get('country', '')
 
         return context
+
 
 class PublisherDetailView(DetailView):
     model = Publisher

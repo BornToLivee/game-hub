@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import DateInput
@@ -44,6 +46,16 @@ class PlayerRegistrationForm(UserCreationForm):
     class Meta:
         model = Player
         fields = ["username", "email", "date_of_birth", "first_name", "last_name", "password1", "password2",]
+
+    def clean_date_of_birth(self):
+        date_of_birth = self.cleaned_data.get('date_of_birth')
+        if date_of_birth:
+            today = timezone.now().date()
+            min_age = today - timedelta(days=365 * 100)
+            max_age = today - timedelta(days=365 * 5)
+            if not (min_age <= date_of_birth <= max_age):
+                raise forms.ValidationError(f"Date of birth must be between {min_age} and {max_age}.")
+        return date_of_birth
 
 
 class PlayerUpdateForm(forms.ModelForm):
