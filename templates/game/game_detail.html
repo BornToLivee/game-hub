@@ -8,7 +8,7 @@
 {% block content %}
   <div class="container mt-5">
     <div class="row">
-      <div class="col-md-8 mx-auto ">
+      <div class="col-md-8 mx-auto">
         <div class="game-info p-4 mb-4 border rounded">
           <h1>{{ game.title }}</h1>
           <div class="game-image-container mb-3">
@@ -18,8 +18,8 @@
           <p><strong>Description:</strong></p>
           <p>{{ game.description }}</p>
           <p><strong>Platforms:</strong>
-            {% for platform in game.platforms.all %}
-              {{ platform.name }}{% if not forloop.last %}, {% endif %}
+            {% for platform in game.platform.all %}
+              {{ platform.name }}{% if not forloop.last %} | {% endif %}
             {% endfor %}
           </p>
         </div>
@@ -62,14 +62,15 @@
       </div>
 
       <div class="col-md-4">
-        <div class="game-actions d-flex flex-column align-items-end">
+        <div class="game-actions-box position-sticky p-3 border rounded"
+             style="right: 10rem; top: 10rem; width: 300px;">
           <div class="mb-3 w-100">
-            <a href="{% url 'game:game-update' game.id %}" class="btn btn-warning btn-block btn-animated">Update
+            <a href="{% url 'game:game-update' game.id %}" class="btn btn-warning btn-block btn-animated custom-btn-lg">Update
               information about game</a>
           </div>
-          <form method="post" action="{% url 'game:update-wishlist-status' game.id %}" class="mb-3 w-100">
+          <form method="post" action="{% url 'game:update-wishlist-status' game.id %}" class="mb-1 w-100 ">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary btn-block btn-animated">
+            <button type="submit" class="btn btn-primary btn-block btn-animated custom-btn-lg">
               {% if game in user.wishlist_games.all %}
                 Remove from wishlist
               {% else %}
@@ -79,16 +80,21 @@
           </form>
           <form method="post" action="{% url 'game:update-completed-status' game.id %}" class="mb-3 w-100">
             {% csrf_token %}
-            <button type="submit" class="btn btn-success btn-block btn-animated">
+            <button type="submit" class="btn btn-success btn-block btn-animated custom-btn-lg">
               {% if game in user.completed_games.all %}
                 Remove from completed
               {% else %}
-                Completed
+                Add to completed
               {% endif %}
             </button>
           </form>
           <div class="w-100">
-            <a href="{{ game.link }}/" class="btn btn-info btn-block btn-animated" target="_blank">View on Steam</a>
+            <a href="{{ game.link }}/" class="btn btn-info btn-block btn-animated custom-btn-lg" target="_blank">View on
+              Steam</a>
+          </div>
+          <div class="mb-3 w-100">
+            <a href="{% url 'game:game-delete' game.id %}" class="btn btn-danger btn-block  custom-btn-lg">Delete
+               game</a>
           </div>
         </div>
       </div>

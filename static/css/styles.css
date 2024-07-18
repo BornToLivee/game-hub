@@ -1,8 +1,12 @@
+/* Подключение шрифтов Google */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Lobster&display=swap');
+
 /* Общие стили */
 body {
     font-family: 'Roboto', sans-serif;
     height: 100%;
     margin: 0;
+    background-color: #f5f5f5;
 }
 
 html, body {
@@ -13,9 +17,11 @@ html, body {
 .container {
     max-width: 900px;
     animation: fadeIn 1s ease-in-out;
+    margin-top: 20px;
 }
 
-h2, h3 {
+h1, h2, h3 {
+    font-family: 'Lobster', cursive;
     font-weight: 500;
 }
 
@@ -100,12 +106,12 @@ a:hover {
 /* Игровая информация */
 .game-info {
     background: #f8f9fa;
-    padding: 30px; /* Увеличено значение padding для большей отступов */
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border: 1px solid #ddd; /* Добавлена рамка */
-    max-width: 1000px; /* Увеличена максимальная ширина контейнера */
-    margin: 0 auto; /* Центрирование контейнера */
+    border: 1px solid #ddd;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .game-image-container {
@@ -140,6 +146,11 @@ a:hover {
 #user-rating i:hover ~ i {
     color: #ffeb3b;
     cursor: pointer;
+}
+
+.game-actions-box {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .game-actions .btn-animated {
@@ -193,8 +204,6 @@ a:hover {
     color: white;
 }
 
-}
-/* Пагинация */
 .pagination {
     display: flex;
     justify-content: center;
@@ -215,115 +224,11 @@ a:hover {
     left: 0;
     background: #ffffff;
 }
-/* Подключение шрифтов Google */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Lobster&display=swap');
-
-/* Общие стили */
-body {
-    font-family: 'Roboto', sans-serif;
-    height: 100%;
-    margin: 0;
-    background-color: #f5f5f5;
-}
-
-.container {
-    max-width: 900px;
-    animation: fadeIn 1s ease-in-out;
-}
-
-h1 {
-    font-family: 'Lobster', cursive;
-    font-size: 3rem;
-    margin-bottom: 20px;
-}
-
-p {
-    font-weight: 400;
-}
-
-.info-link {
-    text-decoration: none;
-    color: inherit; /* Изменение цвета текста */
-}
-
-.info-box {
-    transition: transform 0.3s, box-shadow 0.3s;
-    padding: 60px 20px; /* Увеличенный padding для большего размера квадратов */
-    font-size: 1.5rem;
-    background-color: #b3d7ff; /* Изменение фона квадрата */
-    color: #8b00ff; /* Изменение цвета текста */
-}
-
-.info-box:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
-
-.info-box h3 {
-    font-weight: 500;
-    margin-bottom: 10px;
-}
-
-.info-box p {
-    font-size: 3rem; /* Увеличенный размер текста для количества */
-    font-weight: 700;
-    margin: 0;
-}
-
-/* Анимация появления */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Дополнительные стили для двух квадратов в ряд */
-@media (min-width: 768px) {
-    .info-box {
-        padding: 80px 20px; /* Увеличенный padding для большего размера квадратов на больших экранах */
-    }
-}
-
-/* Подключение шрифтов Google */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Lobster&display=swap');
-
-/* Общие стили */
-body {
-    font-family: 'Roboto', sans-serif;
-    height: 100%;
-    margin: 0;
-    background-color: #f5f5f5;
-}
-
-.container {
-    max-width: 900px;
-    animation: fadeIn 1s ease-in-out;
-    margin-top: 20px;
-}
-
-h1, h2 {
-    font-family: 'Lobster', cursive;
-    font-size: 2.5rem;
-}
-
-p {
-    font-weight: 400;
-}
-
-a {
-    text-decoration: none;
-    color: inherit; /* Изменение цвета текста */
-}
 
 /* Стили для блоков информации о жанре и игр */
 .genre-info, .games-list {
-    background-color: #ffffff; /* Изменение фона квадрата */
-    color: #333333; /* Изменение цвета текста */
+    background-color: #ffffff;
+    color: #333333;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -337,7 +242,7 @@ a {
     transition: transform 0.3s, box-shadow 0.3s;
     background-color: #f8f9fa;
     color: #333333;
-    padding: 40px; /* Увеличенный padding для большего размера квадратов */
+    padding: 40px;
     font-size: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -346,34 +251,4 @@ a {
 .game-box:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
-
-/* Анимация появления */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Стили для кнопок */
-.btn-animated {
-    transition: all 0.3s;
-}
-
-.btn-animated:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-.game-actions-box {
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.game-actions-box {
-  background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

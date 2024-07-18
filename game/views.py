@@ -189,25 +189,25 @@ class PublisherListView(ListView):
     model = Publisher
     template_name = 'game/publisher_list.html'
     context_object_name = 'publisher_list'
-    paginate_by = 9
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        country = self.request.GET.get('country')
+        selected_country = self.request.GET.get('country', '')
+        selected_ordering = self.request.GET.get('ordering', '')
 
-        if country:
-            queryset = queryset.filter(country=country)
+        if selected_country:
+            queryset = queryset.filter(country=selected_country)
+
+        if selected_ordering:
+            queryset = queryset.order_by(selected_ordering)
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        countries = Publisher.objects.values_list('country', flat=True)
-        unique_countries = list(set(countries))
-        unique_countries.sort()
-        context['countries'] = unique_countries
+        context['countries'] = Publisher.objects.values_list('country', flat=True).distinct()
         context['selected_country'] = self.request.GET.get('country', '')
-
+        context['selected_ordering'] = self.request.GET.get('ordering', '')
         return context
 
 
@@ -235,7 +235,7 @@ class GameDetailView(LoginRequiredMixin, DetailView):
             user_rating = Rating.objects.filter(game=game, player=self.request.user).first()
 
         user_votes_count = Rating.objects.filter(game=game).values('player').distinct().count()
-        range_list = range(1, 11)
+        range_list = range(11)
         context.update({
             'average_rating': average_rating,
             'user_rating': user_rating,
@@ -288,6 +288,7 @@ class AboutView(TemplateView):
         context['email'] = "bogdan.zinchenko.2019@gmail.com"
         context['github_account'] = "https://github.com/BornToLivee"
         return context
+
 
 class RandomGameView(View):
     def get(self, request, *args, **kwargs):

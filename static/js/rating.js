@@ -4,26 +4,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const ratingScore = document.getElementById('rating-score');
   const userScore = parseInt(userRating.getAttribute('data-score')) || 0;
 
-  stars.forEach((star, index) => {
-    if (index < userScore) {
-      star.classList.add('fas');
-    } else {
-      star.classList.add('far');
-    }
+  function updateStars(rating) {
+    stars.forEach((star, index) => {
+      if (index < rating) {
+        star.classList.remove('far');
+        star.classList.add('fas');
+      } else {
+        star.classList.remove('fas');
+        star.classList.add('far');
+      }
+    });
+  }
 
+  updateStars(userScore);
+
+  stars.forEach((star) => {
     star.addEventListener('click', function() {
       const rating = parseInt(this.getAttribute('data-value'));
       ratingScore.value = rating;
-
-      stars.forEach((s, i) => {
-        if (i < rating) {
-          s.classList.remove('far');
-          s.classList.add('fas');
-        } else {
-          s.classList.remove('fas');
-          s.classList.add('far');
-        }
-      });
+      updateStars(rating);
     });
   });
 });
