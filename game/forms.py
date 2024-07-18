@@ -11,9 +11,9 @@ from .models import Rating
 class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
-        fields = ['score']
+        fields = ["score"]
         widgets = {
-            'score': forms.NumberInput(attrs={'min': 1, 'max': 10}),
+            "score": forms.NumberInput(attrs={"min": 1, "max": 10}),
         }
 
 
@@ -25,7 +25,16 @@ class GameForm(forms.ModelForm):
 
     class Meta:
         model = Game
-        fields = ("title", "description", "platform", "release_year", "genre", "publisher", "image", "link",)
+        fields = (
+            "title",
+            "description",
+            "platform",
+            "release_year",
+            "genre",
+            "publisher",
+            "image",
+            "link",
+        )
 
 
 class GameSearchForm(forms.Form):
@@ -39,29 +48,41 @@ class GameSearchForm(forms.Form):
 
 class PlayerRegistrationForm(UserCreationForm):
     email = forms.EmailField(required=False)
-    date_of_birth = forms.DateField(widget=DateInput(attrs={'type': 'date'}), required=False)
+    date_of_birth = forms.DateField(
+        widget=DateInput(attrs={"type": "date"}), required=False
+    )
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
 
     class Meta:
         model = Player
-        fields = ["username", "email", "date_of_birth", "first_name", "last_name", "password1", "password2",]
+        fields = [
+            "username",
+            "email",
+            "date_of_birth",
+            "first_name",
+            "last_name",
+            "password1",
+            "password2",
+        ]
 
     def clean_date_of_birth(self):
-        date_of_birth = self.cleaned_data.get('date_of_birth')
+        date_of_birth = self.cleaned_data.get("date_of_birth")
         if date_of_birth:
             today = timezone.now().date()
             min_age = today - timedelta(days=365 * 100)
             max_age = today - timedelta(days=365 * 5)
             if not (min_age <= date_of_birth <= max_age):
-                raise forms.ValidationError(f"Date of birth must be between {min_age} and {max_age}.")
+                raise forms.ValidationError(
+                    f"Date of birth must be between {min_age} and {max_age}."
+                )
         return date_of_birth
 
 
 class PlayerUpdateForm(forms.ModelForm):
     class Meta:
         model = Player
-        fields = ['first_name', 'last_name', 'date_of_birth']
+        fields = ["first_name", "last_name", "date_of_birth"]
 
 
 class GenreCreateForm(forms.ModelForm):

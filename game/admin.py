@@ -10,7 +10,20 @@ class PlayerAdmin(UserAdmin):
         "first_name",
         "last_name",
     )
-    fieldsets = UserAdmin.fieldsets + ((("Additional info", {"fields": ("age", "completed_games", "wishlist_games",)}),))
+    fieldsets = UserAdmin.fieldsets + (
+        (
+            (
+                "Additional info",
+                {
+                    "fields": (
+                        "age",
+                        "completed_games",
+                        "wishlist_games",
+                    )
+                },
+            ),
+        )
+    )
     add_fieldsets = UserAdmin.add_fieldsets + (
         (
             (
