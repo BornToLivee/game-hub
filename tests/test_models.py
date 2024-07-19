@@ -1,27 +1,37 @@
-from decimal import Decimal
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from game.models import Game, Genre, Publisher, Platform
+from game.models import (
+    Game,
+    Genre,
+    Publisher,
+    Platform
+)
 
 
 class ModelsStrTestCase(TestCase):
     def setUp(self):
-        self.genre = Genre.objects.create(name='Action', description='Action games')
-        self.publisher = Publisher.objects.create(name='Test Publisher', description='Test Publisher', country='USA', capitalization=0.01)
-        self.platform = Platform.objects.create(name='Test Platform')
-        self.player = get_user_model().objects.create_user(username='player', password='password')
+        self.genre = Genre.objects.create(name="Action", description="Action games")
+        self.publisher = Publisher.objects.create(
+            name="Test Publisher",
+            description="Test Publisher",
+            country="USA",
+            capitalization=0.01,
+        )
+        self.platform = Platform.objects.create(name="Test Platform")
+        self.player = get_user_model().objects.create_user(
+            username="player", password="password"
+        )
         self.image = "test_image.jpg"
 
         self.game = Game.objects.create(
-            title='Game 1',
-            description='Description of Game 1',
+            title="Game 1",
+            description="Description of Game 1",
             release_year=2023,
             genre=self.genre,
             publisher=self.publisher,
             image=self.image,
-            link='https://example.com/game1'
+            link="https://example.com/game1",
         )
         self.game.platform.set([self.platform])
         self.game.players.add(self.player)
