@@ -11,6 +11,7 @@ from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from game.models import Game, Genre, Platform, Publisher, Player, Rating
 
+
 class GameListViewTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -27,8 +28,6 @@ class GameListViewTestCase(TestCase):
                 link=f"https://www.testgame{i + 1}.com",
                 image="image.jpg"
             )
-
-
 
     def test_retrieve_games_with_pagination(self):
         response = self.client.get(reverse('game:game-list') + '?page=2')
@@ -65,6 +64,27 @@ class GameListViewTestCase(TestCase):
         self.assertIn(self.genre1, genres_in_context)
         self.assertIn(self.genre2, genres_in_context)
         self.assertIn(self.genre3, genres_in_context)
+
+
+class GameCreateViewTestCase(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = get_user_model().objects.create_user(username='testuser', password='sadfawsfsdaf')
+        self.client.login(username='testuser', password='sadfawsfsdaf')
+
+        self.genre = Genre.objects.create(name='Action', description='Action games')
+        self.publisher = Publisher.objects.create(name='Test Publisher', description='Test Publisher desc', country="USA",
+                                                  capitalization=0.02)
+        self.platform = Platform.objects.create(name='Test Platform')
+
+        self.image = "image.jpg"
+        self.create_url = reverse('game:game-create')
+
+    def test_create_game_view_unauthenticated(self):
+        self.client.logout()
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/accounts/login/?next={self.create_url}')
 
 
 class GameDeleteViewTestCase(TestCase):
