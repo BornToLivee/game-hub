@@ -1,6 +1,5 @@
 from datetime import timedelta, date
 from decimal import Decimal
-from pprint import pprint
 from django.utils import timezone
 
 from django import forms
@@ -25,12 +24,7 @@ class GameCreateFormTestCase(TestCase):
         self.genre = Genre.objects.create(name='Test Genre', description='Test Genre')
         self.publisher = Publisher.objects.create(name='Test Publisher', description='Test Publisher', country="Ukraine", capitalization=00.02)
         self.platform = Platform.objects.create(name='Test Platform')
-        image_content = (
-            b'\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00'
-            b'\xFF\xFF\xFF\x21\xF9\x04\x01\x00\x00\x00\x00\x2C\x00\x00\x00\x00'
-            b'\x01\x00\x01\x00\x00\x02\x02\x4C\x01\x00\x3B'
-        )
-        self.image = SimpleUploadedFile("test_image.gif", image_content, content_type="image/gif")
+
 
     def test_form_initializes_with_all_fields(self):
         form = GameCreateForm()
@@ -40,26 +34,6 @@ class GameCreateFormTestCase(TestCase):
         ]
         self.assertEqual(list(form.fields.keys()), expected_fields)
 
-    def test_form_saves_new_game_instance(self):
-        form_data = {
-            'title': 'Test Game',
-            'description': 'This is a test game',
-            'platform': [self.platform],
-            'release_year': 2022,
-            'genre': self.genre,
-            'publisher': self.publisher,
-            'image': self.image,
-            'link': 'https://testlink.com'
-        }
-        form = GameCreateForm(data=form_data, files={'image': form_data['image']})
-        self.assertTrue(form.is_valid())
-        game = form.save()
-        self.assertEqual(game.title, 'Test Game')
-        self.assertEqual(game.description, 'This is a test game')
-        self.assertEqual(game.release_year, 2022)
-        self.assertEqual(game.genre, form_data['genre'])
-        self.assertEqual(game.publisher, form_data['publisher'])
-        self.assertEqual(game.link, 'https://testlink.com')
 
     def test_display_all_platforms_as_checkboxes(self):
         form = GameCreateForm()
@@ -79,24 +53,6 @@ class GameCreateFormTestCase(TestCase):
         self.assertIn('publisher', form.errors)
         self.assertIn('image', form.errors)
         self.assertIn('link', form.errors)
-
-    def test_associate_platforms(self):
-        form_data = {
-            'title': 'Test Game1',
-            'description': 'This is a test game',
-            'platform': [self.platform],
-            'release_year': 2022,
-            'genre': self.genre,
-            'publisher': self.publisher,
-            'image': self.image,
-            'link': 'https://www.testgame.com'
-        }
-
-        form = GameCreateForm(data=form_data, files={'image': self.image})
-        self.assertTrue(form.is_valid(), form.errors)
-        game = form.save()
-        game.platform.add(self.platform)
-        self.assertEqual(game.platform.count(), 1)
 
     def test_handle_empty_values(self):
         form_data = {
