@@ -4,8 +4,14 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import DateInput
 
-from .models import Player, Game, Platform, Genre, Publisher
-from .models import Rating
+from game.models import (
+    Player,
+    Game,
+    Platform,
+    Genre,
+    Publisher,
+    Rating
+)
 
 
 class RatingForm(forms.ModelForm):
@@ -17,7 +23,7 @@ class RatingForm(forms.ModelForm):
         }
 
 
-class GameForm(forms.ModelForm):
+class GameCreateForm(forms.ModelForm):
     platform = forms.ModelMultipleChoiceField(
         queryset=Platform.objects.all(),
         widget=forms.CheckboxSelectMultiple,

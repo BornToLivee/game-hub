@@ -1,32 +1,30 @@
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-    TemplateView,
-)
-
+from django.views import generic
 from game.forms import (
     PlayerRegistrationForm,
     RatingForm,
     GameSearchForm,
-    GameForm,
+    GameCreateForm,
     PlayerUpdateForm,
     GenreCreateForm,
     PublisherCreateForm,
 )
-from game.models import Player, Game, Publisher, Genre, Rating
+from game.models import (
+    Player,
+    Game,
+    Publisher,
+    Genre,
+    Rating
+)
 
 
-class IndexView(TemplateView):
+class IndexView(generic.TemplateView):
     template_name = "game/index.html"
 
     def get_context_data(self, **kwargs):
@@ -39,75 +37,7 @@ class IndexView(TemplateView):
         return context
 
 
-class RegistrationView(LoginRequiredMixin, CreateView):
-    form_class = PlayerRegistrationForm
-    template_name = "registration/register.html"
-    success_url = reverse_lazy("game:personal-page")
-
-
-class PlayerUpdateView(LoginRequiredMixin, UpdateView):
-    model = Player
-    form_class = PlayerUpdateForm
-    template_name = "game/player_update.html"
-    success_url = reverse_lazy("game:personal-page")
-
-    def get_object(self):
-        return self.request.user
-
-
-def update_wishlist_status(request, game_id):
-    game = get_object_or_404(Game, id=game_id)
-    player = request.user
-
-    if game in player.wishlist_games.all():
-        player.wishlist_games.remove(game)
-    else:
-        player.wishlist_games.add(game)
-    return redirect("game:game-detail", pk=game_id)
-
-
-def update_completed_status(request, game_id):
-    game = get_object_or_404(Game, id=game_id)
-    player = request.user
-
-    if game in player.completed_games.all():
-        player.completed_games.remove(game)
-    else:
-        player.completed_games.add(game)
-    return redirect("game:game-detail", pk=game_id)
-
-
-class PersonalPageView(LoginRequiredMixin, TemplateView):
-    template_name = "game/personal_page.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        wishlist_games = self.request.user.wishlist_games.all()
-        completed_games = self.request.user.completed_games.all()
-
-        wishlist_paginator = Paginator(wishlist_games, 5)
-        completed_paginator = Paginator(completed_games, 5)
-
-        wishlist_page_number = self.request.GET.get("wishlist_page")
-        completed_page_number = self.request.GET.get("completed_page")
-
-        wishlist_page_obj = wishlist_paginator.get_page(wishlist_page_number)
-        completed_page_obj = completed_paginator.get_page(completed_page_number)
-
-        context.update(
-            {
-                "wishlist_games": wishlist_page_obj,
-                "completed_games": completed_page_obj,
-                "is_wishlist_paginated": wishlist_paginator.num_pages > 1,
-                "is_completed_paginated": completed_paginator.num_pages > 1,
-            }
-        )
-
-        return context
-
-
-class GameListView(ListView):
+class GameListView(generic.ListView):
     model = Game
     paginate_by = 6
     queryset = Game.objects.select_related("genre", "publisher")
@@ -141,114 +71,7 @@ class GameListView(ListView):
         return context
 
 
-class GameCreateView(LoginRequiredMixin, CreateView):
-    model = Game
-    form_class = GameForm
-    success_url = reverse_lazy("game:game-list")
-
-
-class GameUpdateView(LoginRequiredMixin, UpdateView):
-    model = Game
-    form_class = GameForm
-
-    def get_success_url(self):
-        return reverse("game:game-detail", kwargs={"pk": self.object.pk})
-
-
-class GameDeleteView(LoginRequiredMixin, DeleteView):
-    model = Game
-    success_url = reverse_lazy("game:game-list")
-
-
-class GenreListView(ListView):
-    model = Genre
-    template_name = "game/genre_list.html"
-    context_object_name = "genre_list"
-
-    def get_queryset(self):
-        queryset = Genre.objects.annotate(num_games=Count("game"))
-        ordering = self.request.GET.get("ordering", "name")
-        if ordering in ["num_games", "-num_games"]:
-            queryset = queryset.order_by(ordering)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["selected_ordering"] = self.request.GET.get("ordering", "name")
-        context["genre_list"] = self.get_queryset()
-        return context
-
-
-class GenreDetailView(LoginRequiredMixin, DetailView):
-    model = Genre
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        genre = self.object
-        context["games"] = Game.objects.filter(genre_id=genre.pk)
-        return context
-
-
-class GenreCreateView(LoginRequiredMixin, CreateView):
-    model = Genre
-    form_class = GenreCreateForm
-    template_name = "game/genre_create_form.html"
-    success_url = reverse_lazy("game:genre-list")
-
-
-class GenresUpdateView(LoginRequiredMixin, UpdateView):
-    model = Genre
-    form_class = GenreCreateForm
-    template_name = "game/genre_create_form.html"
-
-    def get_success_url(self):
-        return reverse("game:genre-detail", kwargs={"pk": self.object.pk})
-
-
-class GenreDeleteView(LoginRequiredMixin, DeleteView):
-    model = Genre
-    success_url = reverse_lazy("game:genre-list")
-
-
-class PublisherListView(ListView):
-    model = Publisher
-    template_name = "game/publisher_list.html"
-    context_object_name = "publisher_list"
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        selected_country = self.request.GET.get("country", "")
-        selected_ordering = self.request.GET.get("ordering", "")
-
-        if selected_country:
-            queryset = queryset.filter(country=selected_country)
-
-        if selected_ordering:
-            queryset = queryset.order_by(selected_ordering)
-
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["countries"] = Publisher.objects.values_list(
-            "country", flat=True
-        ).distinct()
-        context["selected_country"] = self.request.GET.get("country", "")
-        context["selected_ordering"] = self.request.GET.get("ordering", "")
-        return context
-
-
-class PublisherDetailView(LoginRequiredMixin, DetailView):
-    model = Publisher
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        publisher = self.object
-        context["games"] = Game.objects.filter(publisher_id=publisher.pk)
-        return context
-
-
-class GameDetailView(LoginRequiredMixin, DetailView):
+class GameDetailView(LoginRequiredMixin, generic.DetailView):
     model = Game
     template_name = "game/game_detail.html"
     context_object_name = "game"
@@ -293,14 +116,120 @@ class GameDetailView(LoginRequiredMixin, DetailView):
         return self.get(request, *args, **kwargs)
 
 
-class PublisherCreateView(CreateView):
+class GameCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Game
+    form_class = GameCreateForm
+    success_url = reverse_lazy("game:game-list")
+
+
+class GameUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Game
+    form_class = GameCreateForm
+
+    def get_success_url(self):
+        return reverse("game:game-detail", kwargs={"pk": self.object.pk})
+
+
+class GameDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Game
+    success_url = reverse_lazy("game:game-list")
+
+
+class GenreListView(generic.ListView):
+    model = Genre
+    template_name = "game/genre_list.html"
+    context_object_name = "genre_list"
+
+    def get_queryset(self):
+        queryset = Genre.objects.annotate(num_games=Count("game"))
+        ordering = self.request.GET.get("ordering", "name")
+        if ordering in ["num_games", "-num_games"]:
+            queryset = queryset.order_by(ordering)
+        else:
+            queryset = queryset.order_by("name")
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["selected_ordering"] = self.request.GET.get("ordering", "name")
+        return context
+
+
+class GenreDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Genre
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        genre = self.object
+        context["games"] = Game.objects.filter(genre_id=genre.pk)
+        return context
+
+
+class GenreCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Genre
+    form_class = GenreCreateForm
+    template_name = "game/genre_create_form.html"
+    success_url = reverse_lazy("game:genre-list")
+
+
+class GenresUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Genre
+    form_class = GenreCreateForm
+    template_name = "game/genre_create_form.html"
+
+    def get_success_url(self):
+        return reverse("game:genre-detail", kwargs={"pk": self.object.pk})
+
+
+class GenreDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Genre
+    success_url = reverse_lazy("game:genre-list")
+
+
+class PublisherListView(generic.ListView):
+    model = Publisher
+    template_name = "game/publisher_list.html"
+    context_object_name = "publisher_list"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        selected_country = self.request.GET.get("country", "")
+        selected_ordering = self.request.GET.get("ordering", "")
+
+        if selected_country:
+            queryset = queryset.filter(country=selected_country)
+
+        if selected_ordering:
+            queryset = queryset.order_by(selected_ordering)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        countries = Publisher.objects.values_list("country", flat=True).distinct()
+        context["countries"] = list(set(countries))
+        context["selected_country"] = self.request.GET.get("country", "")
+        context["selected_ordering"] = self.request.GET.get("ordering", "")
+        return context
+
+
+class PublisherDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Publisher
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["games"] = Game.objects.filter(publisher=self.object)
+        return context
+
+
+class PublisherCreateView(LoginRequiredMixin, generic.CreateView):
     model = Publisher
     form_class = PublisherCreateForm
     template_name = "game/publisher_create_form.html"
     success_url = reverse_lazy("game:publisher-list")
 
 
-class PublisherUpdateView(UpdateView):
+class PublisherUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Publisher
     form_class = PublisherCreateForm
     template_name = "game/publisher_create_form.html"
@@ -309,25 +238,102 @@ class PublisherUpdateView(UpdateView):
         return reverse("game:publisher-detail", kwargs={"pk": self.object.pk})
 
 
-class PublisherDeleteView(DeleteView):
+class PublisherDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Publisher
     success_url = reverse_lazy("game:publisher-list")
 
 
-class AboutView(TemplateView):
+class RegistrationView(generic.CreateView):
+    form_class = PlayerRegistrationForm
+    template_name = "registration/register.html"
+    success_url = reverse_lazy("game:personal-page")
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect(self.success_url)
+
+
+class PlayerUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Player
+    form_class = PlayerUpdateForm
+    template_name = "game/player_update.html"
+    success_url = reverse_lazy("game:personal-page")
+
+    def get_object(self):
+        return self.request.user
+
+def update_game_status(request, game_id, field_name):
+    game = get_object_or_404(Game, id=game_id)
+    player = request.user
+    field = getattr(player, field_name)
+
+    if game in field.all():
+        field.remove(game)
+    else:
+        field.add(game)
+    return redirect("game:game-detail", pk=game_id)
+
+
+def update_wishlist_status(request, game_id):
+    return update_game_status(request, game_id, 'wishlist_games')
+
+
+def update_completed_status(request, game_id):
+    return update_game_status(request, game_id, 'completed_games')
+
+
+class PersonalPageView(LoginRequiredMixin, generic.TemplateView):
+    template_name = "game/personal_page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        wishlist_games = self.request.user.wishlist_games.all()
+        completed_games = self.request.user.completed_games.all()
+
+        wishlist_paginator = Paginator(wishlist_games, 5)
+        completed_paginator = Paginator(completed_games, 5)
+
+        wishlist_page_number = self.request.GET.get("wishlist_page")
+        completed_page_number = self.request.GET.get("completed_page")
+
+        wishlist_page_obj = wishlist_paginator.get_page(wishlist_page_number)
+        completed_page_obj = completed_paginator.get_page(completed_page_number)
+
+        context.update(
+            {
+                "wishlist_games": wishlist_page_obj,
+                "completed_games": completed_page_obj,
+                "is_wishlist_paginated": wishlist_paginator.num_pages > 1,
+                "is_completed_paginated": completed_paginator.num_pages > 1,
+            }
+        )
+
+        return context
+
+
+class AboutView(generic.TemplateView):
     template_name = "game/about.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["text"] = (
-            "Hi, I'm the author of this cute little gaming site. My name is Bohdan, I'm 23 years old, and I'm a beginner Python developer. If you liked it and want to invite me to work, write to me by email. Thanks for stopping by, have a nice day!"
-        )
-        context["email"] = "bogdan.zinchenko.2019@gmail.com"
-        context["github_account"] = "https://github.com/BornToLivee"
+        context.update({
+            "text": (
+                "Hi, I'm the author of this cute little gaming site. "
+                "My name is Bohdan, I'm 23 years old, and I'm a beginner Python developer. "
+                "If you liked it and want to invite me to work, write to me by email. "
+                "Thanks for stopping by, have a nice day!"
+            ),
+            "email": "bogdan.zinchenko.2019@gmail.com",
+            "github_account": "https://github.com/BornToLivee",
+        })
         return context
 
 
 class RandomGameView(View):
     def get(self, request, *args, **kwargs):
         random_game = Game.objects.order_by("?").first()
-        return redirect("game:game-detail", pk=random_game.pk)
+        if random_game:
+            return redirect("game:game-detail", pk=random_game.pk)
+        return redirect("game:game-list")

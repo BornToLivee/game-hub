@@ -1,11 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import date
+from django.db.models import Avg
 
 
 class Game(models.Model):
     title = models.CharField(max_length=100, unique=True)
-    description = models.TextField(unique=True)
+    description = models.TextField()
     release_year = models.IntegerField()
     genre = models.ForeignKey("Genre", on_delete=models.CASCADE)
     platform = models.ManyToManyField("Platform", related_name="games", blank=True)
@@ -21,10 +22,7 @@ class Game(models.Model):
         return self.title
 
     def get_average_rating(self):
-        ratings = self.ratings.all()
-        if ratings.exists():
-            return sum(rating.score for rating in ratings) / ratings.count()
-        return 0
+        return self.ratings.aggregate(average=Avg('score'))['average'] or 0
 
 
 class Platform(models.Model):
@@ -63,7 +61,7 @@ class Publisher(models.Model):
     image = models.ImageField(upload_to="publisher_images", blank=True, null=True)
 
     class Meta:
-        ordering = ["capitalization"]
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -85,14 +83,8 @@ class Player(AbstractUser):
     def age(self):
         if self.date_of_birth:
             today = date.today()
-            age = (
-                today.year
-                - self.date_of_birth.year
-                - (
-                    (today.month, today.day)
-                    < (self.date_of_birth.month, self.date_of_birth.day)
-                )
-            )
+            age = today.year - self.date_of_birth.year - ((today.month, today.day)
+                                                          < (self.date_of_birth.month, self.date_of_birth.day))
             return age
         return None
 
