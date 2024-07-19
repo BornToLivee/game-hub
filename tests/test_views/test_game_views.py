@@ -1,33 +1,34 @@
-from _decimal import Decimal
+import os
+import shutil
+import tempfile
+from decimal import Decimal
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.http import HttpRequest
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
-
 from game.models import Game, Genre, Platform, Publisher, Player, Rating
-from game.views import GameListView, GameCreateView, GameDeleteView, GameDetailView
-from django.test import RequestFactory
-
 
 class GameListViewTestCase(TestCase):
     def setUp(self):
-        self.factory = RequestFactory()
+        self.client = Client()
         self.genre = Genre.objects.create(name="Action", description="Action games")
         self.platform = Platform.objects.create(name="PC")
         self.publisher = Publisher.objects.create(name="Epic Games", description="Epic Games Publisher", country="USA", capitalization=Decimal("10.00"))
         for i in range(10):
-            game = Game.objects.create(
+            Game.objects.create(
                 title=f"Test Game {i + 1}",
                 description=f"Description for Test Game {i + 1}",
                 release_year=2023,
                 genre=self.genre,
                 publisher=self.publisher,
                 link=f"https://www.testgame{i + 1}.com",
-                image=ContentFile(f"image{i + 1}.jpg", name=f"test_image{i + 1}.jpg")
+                image="image.jpg"
             )
-            game.save()
+
+
 
     def test_retrieve_games_with_pagination(self):
         response = self.client.get(reverse('game:game-list') + '?page=2')
@@ -45,7 +46,7 @@ class GameListViewTestCase(TestCase):
             genre=self.genre,
             publisher=self.publisher,
             link="https://www.testgame.com",
-            image=ContentFile("test_image.jpg", name="test_image.jpg")
+            image="test_image.jpg"
         )
         response = self.client.get(reverse('game:game-list') + '?title=Test Game')
         self.assertEqual(response.status_code, 200)
@@ -60,9 +61,7 @@ class GameListViewTestCase(TestCase):
         response = self.client.get(reverse('game:game-list'))
 
         self.assertIn('genres', response.context)
-
         genres_in_context = response.context['genres']
-
         self.assertIn(self.genre1, genres_in_context)
         self.assertIn(self.genre2, genres_in_context)
         self.assertIn(self.genre3, genres_in_context)
@@ -87,7 +86,7 @@ class GameDeleteViewTestCase(TestCase):
             genre=self.genre,
             publisher=self.publisher,
             link="https://www.testgame.com",
-            image=SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
+            image="image.jpeg"
         )
         self.game.platform.set([self.platform])
         self.game.save()
@@ -109,8 +108,8 @@ class GameDeleteViewTestCase(TestCase):
 
 class GameDetailViewTestCase(TestCase):
     def setUp(self):
-        self.factory = RequestFactory()
         self.client = Client()
+        self.factory = RequestFactory()
         self.user = get_user_model().objects.create_user(username='testuser', password='12345', email="qwe@qwe.com")
         self.genre = Genre.objects.create(name="Action", description="Action games")
         self.platform = Platform.objects.create(name="PC")
@@ -127,7 +126,7 @@ class GameDetailViewTestCase(TestCase):
             genre=self.genre,
             publisher=self.publisher,
             link="https://www.testgame.com",
-            image=SimpleUploadedFile("test_image.jpg", b"file_content", content_type="image/jpeg")
+            image="image.jpeg"
         )
         self.game.platform.set([self.platform])
         self.game.save()
@@ -151,8 +150,7 @@ class GameDetailViewTestCase(TestCase):
         player2 = Player.objects.create(username="player2", password="<PASSWORD>")
         Rating.objects.create(player=player1, game=self.game, score=8)
         Rating.objects.create(player=player2, game=self.game, score=6)
-
         self.client.force_login(player1)
         response = self.client.get(reverse("game:game-detail", kwargs={"pk": self.game.pk}))
-
         self.assertEqual(response.context["user_votes_count"], 2)
+
