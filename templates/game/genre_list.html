@@ -6,8 +6,6 @@
     <h1 class="mb-0">Genres</h1>
     <a href="{% url 'game:genre-create' %}" class="btn btn-primary">Add new genre</a>
   </div>
-
-  <!-- Sort by Number of Games -->
   <div class="form-group d-flex align-items-center">
     <p class="mb-0 mr-2">Sort by number of games:</p>
     <a href="?ordering=num_games" class="mr-2">
@@ -34,13 +32,9 @@
       </div>
     {% endfor %}
   </div>
-
   {% if genre_list|length == 0 %}
-    <p>There are no genres in the library.</p>
+    <p>There are no genres in the hub.</p>
   {% endif %}
-
-  {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/genre_cards.css' %}">
-  {% endblock %}
+  <link rel="stylesheet" href="{% static 'css/genre_cards.css' %}">
   <script src="{% static 'js/genre_cards.js' %}"></script>
 {% endblock %}

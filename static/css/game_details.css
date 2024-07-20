@@ -1,0 +1,103 @@
+/* Стили для страницы деталей игры */
+
+/* Общие стили для контейнера и отступов */
+.container {
+    max-width: 900px;
+    margin-top: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.game-info {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.game-image-container {
+    width: 100%;
+    max-width: 700px;
+    height: 450px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.game-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.rating-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#average-rating i {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+#average-rating i:hover {
+    color: #ffeb3b;
+}
+
+/* Стили для пользовательского рейтинга */
+.user-rating-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+#user-rating i {
+    font-size: 24px;
+    color: #ffc107;
+}
+
+#user-rating i:hover {
+    color: #ffeb3b;
+    cursor: pointer;
+}
+
+/* Стили для блока действий с игрой */
+.game-actions-box {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 10rem;
+    right: 10rem;
+    width: 300px;
+}
+
+.btn-animated {
+    transition: all 0.3s;
+}
+
+.btn-animated:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

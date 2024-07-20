@@ -1,0 +1,79 @@
+/* Общие стили для боковой навигации */
+.sidebar-nav {
+    padding-top: 20px;
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    width: 250px;
+    overflow-y: auto;
+}
+
+.sidebar-nav .list-group-item {
+    border: none;
+    padding: 15px 20px;
+    margin-bottom: 10px; /* Добавлено расстояние между контейнерами */
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.sidebar-nav .list-group-item:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.sidebar-nav .list-group-item a {
+    color: #333;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+}
+
+.sidebar-nav .list-group-item a:hover {
+    color: white;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1;
+    transform: scale(1.02);
+}
+
+/* Стили для кнопок */
+.btn-primary.btn-sm, .btn-secondary.btn-sm {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-primary.btn-sm:hover, .btn-secondary.btn-sm:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Стили для авторизованных пользователей */
+.sidebar-nav .list-group-item p {
+    margin: 0;
+    font-weight: 700;
+}
+
+.sidebar-nav .list-group-item form {
+    display: inline-block;
+}
+
+.sidebar-nav .list-group-item form button {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar-nav .list-group-item form button:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* Стили для центровки элементов */
+.sidebar-nav .list-group-item.text-center span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Стили для иконок */
+.sidebar-nav .list-group-item i {
+    margin-right: 10px;
+    color: #0056b3;
+}

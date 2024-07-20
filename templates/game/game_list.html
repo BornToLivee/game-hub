@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% load crispy_forms_filters %}
 
 {% block content %}
@@ -6,14 +7,10 @@
     <h1 class="mb-0">Game List</h1>
     <a href="{% url 'game:game-create' %}" class="btn btn-primary">Add new game</a>
   </div>
-
-  <!-- Search Form -->
   <form action="" method="get" class="form-inline mb-4">
     {{ search_form|crispy }}
     <button type="submit" class="btn btn-info ml-2">Search</button>
   </form>
-
-  <!-- Filter Form -->
   <form action="" method="get" class="form-inline mb-4">
     <div class="form-group mr-3">
       <label for="genre" class="mr-2">Genre:</label>
@@ -37,8 +34,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Filter</button>
   </form>
-
-  <!-- Game List -->
   <div class="row">
     {% for game in game_list %}
       <div class="col-md-4 mb-4">
@@ -58,27 +53,6 @@
       </div>
     {% endfor %}
   </div>
-
-  <script>
-      // Handle clicking on game card to view details
-      document.querySelectorAll('.card').forEach(card => {
-          card.addEventListener('click', function () {
-              const url = this.querySelector('a').getAttribute('href');
-              window.location.href = url;
-          });
-      });
-
-      // Handle image zoom effect on hover
-      document.querySelectorAll('.card-img-top').forEach(image => {
-          image.addEventListener('mouseenter', function () {
-              this.style.transform = 'scale(1.1)';
-              this.style.transition = 'transform 0.3s';
-          });
-
-          image.addEventListener('mouseleave', function () {
-              this.style.transform = 'scale(1)';
-              this.style.transition = 'transform 0.3s';
-          });
-      });
-  </script>
+  <link rel="stylesheet" href="{% static 'css/game_list.css' %}">
+  <script src="{% static 'js/game_list.js' %}"></script>
 {% endblock %}

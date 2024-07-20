@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
   <div class="container mt-5">
@@ -28,5 +29,7 @@
       <a href="{% url 'game:genre-delete' pk=genre.id %}" class="btn btn-danger btn-lg btn-block btn-animated">Delete
         Genre</a>
     </div>
+    <link rel="stylesheet" href="{% static 'css/genre_detail.css' %}">
   </div>
 {% endblock %}
+

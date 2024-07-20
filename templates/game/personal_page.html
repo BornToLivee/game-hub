@@ -1,12 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 {% load query_transform %}
 
 {% block content %}
   <div class="container mt-5">
-    <h2 class="mb-4 text-center title" >Personal Page</h2>
-
+    <h2 class="mb-4 text-center title">Personal Page</h2>
     <div class="row">
-      <!-- User Information -->
       <div class="col-md-12 mb-4">
         <div class="user-info p-4 border rounded shadow-sm bg-light">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -35,7 +34,7 @@
               <li class="list-group-item text-muted">No games in wishlist</li>
             {% endfor %}
           </ul>
-          <!-- Пагинация для wishlist -->
+
           {% if is_wishlist_paginated %}
             <ul class="pagination mt-3">
               {% if wishlist_games.has_previous %}
@@ -68,7 +67,6 @@
               <li class="list-group-item text-muted">No completed games yet</li>
             {% endfor %}
           </ul>
-          <!-- Пагинация для completed games -->
           {% if is_completed_paginated %}
             <ul class="pagination mt-3">
               {% if completed_games.has_previous %}
@@ -90,4 +88,5 @@
       </div>
     </div>
   </div>
+  <link rel="stylesheet" href="{% static 'css/personal_page.css' %}">
 {% endblock %}

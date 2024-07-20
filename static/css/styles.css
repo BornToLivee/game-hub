@@ -14,12 +14,6 @@ html, body {
     margin: 0;
 }
 
-.container {
-    max-width: 900px;
-    animation: fadeIn 1s ease-in-out;
-    margin-top: 20px;
-}
-
 h1, h2, h3 {
     font-family: 'Lobster', cursive;
     font-weight: 500;
@@ -30,31 +24,14 @@ p {
 }
 
 a {
-    color: #007bff;
-    text-decoration: none;
+    color: grey;
+    text-decoration: #9fcdff;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
-/* Анимации */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.container .row {
-    animation: fadeIn 1s ease-in-out;
-}
-
-/* Навигация */
 .navbar {
     position: fixed;
     top: 0;
@@ -65,134 +42,6 @@ a:hover {
 .container-fluid {
     height: 100%;
     margin-top: 56px;
-}
-
-.sidebar-wrapper {
-    height: calc(100% - 56px);
-    position: fixed;
-    top: 56px;
-    left: 0;
-    background-color: #f8f9fa;
-    border-right: 1px solid #ddd;
-    overflow-y: auto;
-}
-
-.sidebar-nav {
-    padding-top: 20px;
-}
-
-.sidebar-nav .list-group-item {
-    border: none;
-    padding: 15px 20px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.sidebar-nav .list-group-item:hover {
-    background-color: #007bff;
-    color: white;
-}
-
-.sidebar-nav .list-group-item a {
-    color: #333;
-    text-decoration: none;
-    width: 100%;
-    display: block;
-}
-
-.sidebar-nav .list-group-item a:hover {
-    color: white;
-}
-
-/* Игровая информация */
-.game-info {
-    background: #f8f9fa;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border: 1px solid #ddd;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.game-image-container {
-    width: 100%;
-    max-width: 700px;
-    height: 450px;
-    margin: 0 auto;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.game-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-}
-
-.rating-section, .user-rating-section {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-#average-rating i, #user-rating i {
-    font-size: 24px;
-    color: #ffc107;
-}
-
-#user-rating i:hover,
-#user-rating i:hover ~ i {
-    color: #ffeb3b;
-    cursor: pointer;
-}
-
-.game-actions-box {
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.game-actions .btn-animated {
-    transition: all 0.3s;
-}
-
-.game-actions .btn-animated:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.btn-block {
-    display: block;
-    width: 100%;
-}
-
-/* Страница профиля пользователя */
-.user-info {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.user-details p {
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.wishlist, .completed-games {
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* Общие стили элементов */
-.list-group-item {
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.list-group-item:hover {
-    background-color: #f1f1f1;
-    transform: scale(1.02);
 }
 
 .btn-outline-primary {
@@ -214,7 +63,6 @@ a:hover {
     margin: 0 5px;
 }
 
-/* Фоновые анимации */
 .background-animation {
     position: fixed;
     width: 100%;
@@ -225,30 +73,3 @@ a:hover {
     background: #ffffff;
 }
 
-/* Стили для блоков информации о жанре и игр */
-.genre-info, .games-list {
-    background-color: #ffffff;
-    color: #333333;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.games-list h2 {
-    font-size: 2rem;
-}
-
-.game-box {
-    transition: transform 0.3s, box-shadow 0.3s;
-    background-color: #f8f9fa;
-    color: #333333;
-    padding: 40px;
-    font-size: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.game-box:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-}
