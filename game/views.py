@@ -263,6 +263,7 @@ class PlayerUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_object(self):
         return self.request.user
 
+
 def update_game_status(request, game_id, field_name):
     game = get_object_or_404(Game, id=game_id)
     player = request.user
