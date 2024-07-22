@@ -12,7 +12,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <link rel="icon" href="{% static 'images/logo.jpg' %}" type="image/x-icon">
-  {% load static %}
 </head>
 
 <body>
@@ -42,21 +41,15 @@
     crossorigin="anonymous">
 </script>
 <script src="{% static 'js/rating.js' %}"></script>
-<script
-    src="https://code.jquery.com/jquery-3.6.0.js"
-    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-    crossorigin="anonymous">
-</script>
-<script src="{% static 'js/rating.js' %}"></script>
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
-    particlesJS.load('particles-js', '{% static 'js/particles.json' %}', function () {
+    particlesJS.load('particles-js', 'https://elevate-bkt-8010.s3.eu-north-1.amazonaws.com/css/particles.json', function () {
         console.log('Particles.js config loaded');
     });
 </script>
 {% block scripts %}{% endblock %}
 </body>
-
 </html>
+

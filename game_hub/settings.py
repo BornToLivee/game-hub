@@ -41,10 +41,12 @@ INSTALLED_APPS = [
     "crispy_bootstrap4",
     "debug_toolbar",
     "game",
+    "storages",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -120,18 +122,38 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
+# AWS conf
 
-STATIC_URL = "static/"
+AWS_ACCESS_KEY_ID = "AKIAXYKJUA3CQ2JJFCFA"
+AWS_SECRET_ACCESS_KEY = "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"
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+AWS_STORAGE_BUCKET_NAME = "elevate-bkt-8010"
+
+AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_FILE_OVERWRITE = False
+
+STORAGES = {
+    # Media files
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+    # Css and JS files
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+}
+
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+
+STATIC_ROOT = "staticfiles/"
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-MEDIA_URL = "/media/"
-
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
