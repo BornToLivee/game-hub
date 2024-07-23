@@ -2,7 +2,11 @@
 
 Django project for managing games and watching game info in your personal hub.
 
-[Game hub project deployed to Render]()
+[Game hub project deployed to Render](https://game-hub-13my.onrender.com/)
+## Login and password for testing
+
+username: admin
+password: admin1234
 
 ## Installation
 
