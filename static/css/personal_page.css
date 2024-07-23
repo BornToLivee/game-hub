@@ -3,27 +3,21 @@
     background-color: white;
     color: #333;
 }
-
-/* Стили для списка игр */
 .list-group-item {
     color: #007bff;
 }
-
 .list-group-item .badge {
     font-size: 0.75rem;
     font-weight: 600;
 }
-
 .pagination .page-link {
     color: #007bff;
 }
-
 .pagination .page-item.active .page-link {
     background-color: #007bff;
     border-color: #007bff;
     color: #fff;
 }
-
 .pagination .page-link:hover {
     background-color: #0056b3;
     color: #fff;

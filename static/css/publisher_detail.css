@@ -1,29 +1,24 @@
 .container {
     margin-top: 20px;
 }
-
 .card {
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, box-shadow 0.3s;
 }
-
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
-
 .card-title {
     font-size: 2rem;
     font-weight: 700;
 }
-
 .card-text {
     font-size: 1.2rem;
     color: #555;
 }
-
 .list-group-item {
     border: none;
     border-radius: 5px;
@@ -31,7 +26,6 @@
     margin-bottom: 0px;
     transition: transform 0.3s, box-shadow 0.3s;
 }
-
 .list-group-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
