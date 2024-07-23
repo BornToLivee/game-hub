@@ -15,8 +15,9 @@
             <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name|default:"" }}">
         </div>
         <div class="mb-3">
-            <label for="age" class="form-label">Date of birth</label>
+            <label for="age" class="form-label">Date of birth
             <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" value="{{ user.date_of_birth|default:"" }}">
+        </label>
         </div>
         <button type="submit" class="btn btn-primary">Update</button>
     </form>

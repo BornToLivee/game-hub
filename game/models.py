@@ -9,11 +9,19 @@ class Game(models.Model):
     description = models.TextField()
     release_year = models.IntegerField()
     genre = models.ForeignKey("Genre", on_delete=models.CASCADE)
-    platform = models.ManyToManyField("Platform", related_name="games", blank=True)
+    platform = models.ManyToManyField(
+        "Platform",
+        related_name="games",
+        blank=True
+    )
     publisher = models.ForeignKey("Publisher", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="game_images")
     link = models.URLField(max_length=500, unique=True)
-    players = models.ManyToManyField("Player", related_name="games", blank=True)
+    players = models.ManyToManyField(
+        "Player",
+        related_name="games",
+        blank=True
+    )
 
     class Meta:
         ordering = ["title"]
@@ -22,7 +30,7 @@ class Game(models.Model):
         return self.title
 
     def get_average_rating(self):
-        return self.ratings.aggregate(average=Avg('score'))['average'] or 0
+        return self.ratings.aggregate(average=Avg("score"))["average"] or 0
 
 
 class Platform(models.Model):
@@ -34,7 +42,11 @@ class Platform(models.Model):
 
 class Rating(models.Model):
     player = models.ForeignKey("Player", on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="ratings")
+    game = models.ForeignKey(
+        Game,
+        on_delete=models.CASCADE,
+        related_name="ratings"
+    )
     score = models.PositiveIntegerField()
 
     class Meta:
@@ -47,7 +59,11 @@ class Rating(models.Model):
 class Genre(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(unique=True)
-    image = models.ImageField(upload_to="genre_images", blank=True, null=True)
+    image = models.ImageField(
+        upload_to="genre_images",
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.name
@@ -57,8 +73,16 @@ class Publisher(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(unique=True)
     country = models.CharField(max_length=100)
-    capitalization = models.DecimalField(max_digits=5, decimal_places=2, default=0)
-    image = models.ImageField(upload_to="publisher_images", blank=True, null=True)
+    capitalization = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+    image = models.ImageField(
+        upload_to="publisher_images",
+        blank=True,
+        null=True
+    )
 
     class Meta:
         ordering = ["name"]
@@ -83,8 +107,9 @@ class Player(AbstractUser):
     def age(self):
         if self.date_of_birth:
             today = date.today()
-            age = today.year - self.date_of_birth.year - ((today.month, today.day)
-                                                          < (self.date_of_birth.month, self.date_of_birth.day))
+            age = (today.year - self.date_of_birth.year
+                   - ((today.month, today.day)
+                      < (self.date_of_birth.month, self.date_of_birth.day)))
             return age
         return None
 

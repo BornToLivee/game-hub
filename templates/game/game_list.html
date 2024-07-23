@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_filters %}
 
 {% block content %}
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="mb-0">Game List</h1>
-    <a href="{% url 'game:game-create' %}" class="btn btn-primary">Add new game</a>
+    <a href="{% url "game:game-create" %}" class="btn btn-primary">Add new game</a>
   </div>
   <form action="" method="get" class="form-inline mb-4">
     {{ search_form|crispy }}
@@ -43,13 +43,13 @@
           <div class="card-body">
             <h5 class="card-title mb-0">{{ game.title }}</h5>
             <span class="text-muted">{{ game.release_year }}</span>
-            <a href="{% url 'game:game-detail' pk=game.id %}"></a>
+            <a href="{% url "game:game-detail" pk=game.id %}"></a>
           </div>
         </div>
       </div>
     {% empty %}
       <div class="col-md-12">
-        <a href="{% url 'game:game-create' %}">Can't find your game in the list? Add it to the website!</a>
+        <a href="{% url "game:game-create" %}">Can't find your game in the list? Add it to the website!</a>
       </div>
     {% endfor %}
   </div>

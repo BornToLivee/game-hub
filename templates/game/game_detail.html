@@ -63,7 +63,7 @@
         <div class="game-actions-box position-sticky p-3 border rounded"
              style="right: 10rem; top: 10rem; width: 300px;">
           <div class="mb-3 w-100">
-            <a href="{% url 'game:game-update' game.id %}" class="btn btn-warning btn-block btn-animated custom-btn-lg">Update
+            <a href="{% url "game:game-update" game.id %}" class="btn btn-warning btn-block btn-animated custom-btn-lg">Update
               information about game</a>
           </div>
           <form method="post" action="{% url 'game:update-wishlist-status' game.id %}" class="mb-1 w-100 ">
