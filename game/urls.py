@@ -5,14 +5,26 @@ from game import views
 from game_hub import settings
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
-    path("games/", views.GameListView.as_view(), name="game-list"),
+    path(
+        "",
+        views.IndexView.as_view(),
+        name="index"
+    ),
+    path(
+        "games/",
+        views.GameListView.as_view(),
+        name="game-list"
+    ),
     path(
         "games/<int:pk>/",
         views.GameDetailView.as_view(),
         name="game-detail"
     ),
-    path("games/create/", views.GameCreateView.as_view(), name="game-create"),
+    path(
+        "games/create/",
+        views.GameCreateView.as_view(),
+        name="game-create"
+    ),
     path(
         "games/<int:pk>/update/",
         views.GameUpdateView.as_view(),
@@ -23,7 +35,11 @@ urlpatterns = [
         views.GameDeleteView.as_view(),
         name="game-delete"
     ),
-    path("genres/", views.GenreListView.as_view(), name="genre-list"),
+    path(
+        "genres/",
+        views.GenreListView.as_view(),
+        name="genre-list"
+    ),
     path(
         "ganres/<int:pk>/",
         views.GenreDetailView.as_view(),
@@ -79,7 +95,11 @@ urlpatterns = [
         views.update_completed_status,
         name="update-completed-status",
     ),
-    path("register/", views.RegistrationView.as_view(), name="register"),
+    path(
+        "register/",
+        views.RegistrationView.as_view(),
+        name="register"
+    ),
     path(
         "personal_page/",
         views.PersonalPageView.as_view(),
@@ -90,8 +110,16 @@ urlpatterns = [
         views.PlayerUpdateView.as_view(),
         name="player-update"
     ),
-    path("about/", views.AboutView.as_view(), name="about-page"),
-    path("random/", views.RandomGameView.as_view(), name="random-game"),
+    path(
+        "about/",
+        views.AboutView.as_view(),
+        name="about-page"
+    ),
+    path(
+        "random/",
+        views.RandomGameView.as_view(),
+        name="random-game"
+    ),
 ]
 
 if settings.DEBUG:
