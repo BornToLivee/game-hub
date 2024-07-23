@@ -26,7 +26,7 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "game-hub-13my.onrender.com"]
+ALLOWED_HOSTS = [os.environ["ALLOWED_HOSTS"], "localhost"]
 
 # Application definition
 
@@ -89,7 +89,7 @@ DATABASES = {
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES["default"].update(db_from_env)
 
-DATABASE_URL = "postgresql://neondb_owner:5RLA7GZsYVKX@ep-bitter-scene-a2p26u44.eu-central-1.aws.neon.tech/neondb?sslmode=require"
+DATABASE_URL = os.environ["DATABASE_URL"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -123,11 +123,10 @@ USE_I18N = True
 USE_TZ = True
 
 # AWS conf
+AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
 
-AWS_ACCESS_KEY_ID = "AKIAXYKJUA3CQ2JJFCFA"
-AWS_SECRET_ACCESS_KEY = "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"
-
-AWS_STORAGE_BUCKET_NAME = "elevate-bkt-8010"
+AWS_STORAGE_BUCKET_NAME = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 AWS_S3_CUSTOM_DOMAIN = "%s.s3.amazonaws.com" % AWS_STORAGE_BUCKET_NAME
 
