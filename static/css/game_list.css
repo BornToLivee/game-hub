@@ -2,17 +2,14 @@
     display: flex;
     flex-wrap: wrap;
 }
-
 .btn-info {
     background-color: #17a2b8;
     border-color: #17a2b8;
 }
-
 .btn-info:hover {
     background-color: #138496;
     border-color: #117a8b;
 }
-
 .form-group {
     margin-bottom: 1rem;
 }
@@ -20,12 +17,10 @@
     cursor: pointer;
     transition: box-shadow 0.3s, transform 0.3s;
 }
-
 .card:hover {
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     transform: scale(1.02);
 }
-
 .card-img-top {
     transition: transform 0.3s;
 }

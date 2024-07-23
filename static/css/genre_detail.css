@@ -2,42 +2,35 @@
     max-width: 900px;
     margin-top: 20px;
 }
-
 .genre-info {
     background: #f8f9fa;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-
 .games-list {
     background: #f8f9fa;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-
 .game-link {
     text-decoration: none;
     color: inherit;
 }
-
 .game-box {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
     transition: box-shadow 0.3s, transform 0.3s;
 }
-
 .game-box:hover {
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     transform: scale(1.02);
 }
-
 .btn-animated {
     transition: all 0.3s;
 }
-
 .btn-animated:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);

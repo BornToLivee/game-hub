@@ -1,6 +1,3 @@
-/* Стили для страницы деталей игры */
-
-/* Общие стили для контейнера и отступов */
 .container {
     max-width: 900px;
     margin-top: 20px;
@@ -48,8 +45,6 @@
 #average-rating i:hover {
     color: #ffeb3b;
 }
-
-/* Стили для пользовательского рейтинга */
 .user-rating-section {
     background: #f8f9fa;
     padding: 20px;
@@ -66,8 +61,6 @@
     color: #ffeb3b;
     cursor: pointer;
 }
-
-/* Стили для блока действий с игрой */
 .game-actions-box {
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
