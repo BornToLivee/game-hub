@@ -190,7 +190,7 @@ class PublisherCreateViewTestCase(TestCase):
         response = self.client.get(reverse("game:publisher-create"))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
-            response, f'/accounts/login/?next={reverse("game:publisher-create")}'
+            response, f"/accounts/login/?next={reverse("game:publisher-create")}"
         )
 
 
@@ -262,7 +262,7 @@ class PublisherUpdateViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
             response,
-            f'/accounts/login/?next={reverse("game:publisher-update", kwargs={"pk": self.publisher.pk})}',
+            f"/accounts/login/?next={reverse("game:publisher-update", kwargs={"pk": self.publisher.pk})}",
         )
 
 

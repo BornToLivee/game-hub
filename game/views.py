@@ -80,7 +80,8 @@ class GameDetailView(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         game = self.get_object()
         average_rating = (
-            Rating.objects.filter(game=game).aggregate(Avg("score"))["score__avg"] or 0
+            Rating.objects.filter(game=game).aggregate(
+                Avg("score"))["score__avg"] or 0
         )
         user_rating = None
         if self.request.user.is_authenticated:
@@ -89,7 +90,8 @@ class GameDetailView(LoginRequiredMixin, generic.DetailView):
             ).first()
 
         user_votes_count = (
-            Rating.objects.filter(game=game).values("player").distinct().count()
+            Rating.objects.filter(game=game).values("player")
+            .distinct().count()
         )
         range_list = range(11)
         context.update(
@@ -206,7 +208,8 @@ class PublisherListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        countries = Publisher.objects.values_list("country", flat=True).distinct()
+        countries = (Publisher.objects.values_list("country", flat=True)
+                     .distinct())
         context["countries"] = list(set(countries))
         context["selected_country"] = self.request.GET.get("country", "")
         context["selected_ordering"] = self.request.GET.get("ordering", "")
@@ -277,11 +280,11 @@ def update_game_status(request, game_id, field_name):
 
 
 def update_wishlist_status(request, game_id):
-    return update_game_status(request, game_id, 'wishlist_games')
+    return update_game_status(request, game_id, "wishlist_games")
 
 
 def update_completed_status(request, game_id):
-    return update_game_status(request, game_id, 'completed_games')
+    return update_game_status(request, game_id, "completed_games")
 
 
 class PersonalPageView(LoginRequiredMixin, generic.TemplateView):
@@ -300,7 +303,9 @@ class PersonalPageView(LoginRequiredMixin, generic.TemplateView):
         completed_page_number = self.request.GET.get("completed_page")
 
         wishlist_page_obj = wishlist_paginator.get_page(wishlist_page_number)
-        completed_page_obj = completed_paginator.get_page(completed_page_number)
+        completed_page_obj = completed_paginator.get_page(
+            completed_page_number
+        )
 
         context.update(
             {
@@ -321,9 +326,12 @@ class AboutView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             "text": (
-                "Hi, I'm the author of this cute little gaming site. "
-                "My name is Bohdan, I'm 23 years old, and I'm a beginner Python developer. "
-                "If you liked it and want to invite me to work, write to me by email. "
+                "Hi, I'm the author of this "
+                "cute little gaming site. "
+                "My name is Bohdan, "
+                "I'm 23 years old, and I'm a beginner Python developer. "
+                "If you liked it and want to "
+                "invite me to work, write to me by email. "
                 "Thanks for stopping by, have a nice day!"
             ),
             "email": "bogdan.zinchenko.2019@gmail.com",
