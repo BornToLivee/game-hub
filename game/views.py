@@ -322,23 +322,6 @@ class PersonalPageView(LoginRequiredMixin, generic.TemplateView):
 class AboutView(generic.TemplateView):
     template_name = "game/about.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            "text": (
-                "Hi, I'm the author of this "
-                "cute little gaming site. "
-                "My name is Bohdan, "
-                "I'm 23 years old, and I'm a beginner Python developer. "
-                "If you liked it and want to "
-                "invite me to work, write to me by email. "
-                "Thanks for stopping by, have a nice day!"
-            ),
-            "email": "bogdan.zinchenko.2019@gmail.com",
-            "github_account": "https://github.com/BornToLivee",
-        })
-        return context
-
 
 class RandomGameView(View):
     def get(self, request, *args, **kwargs):
