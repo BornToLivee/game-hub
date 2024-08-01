@@ -2,25 +2,25 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Avg, Count
-from django.shortcuts import redirect, get_object_or_404
-from django.urls import reverse_lazy, reverse
-from django.views import View
-from django.views import generic
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.views import View, generic
+
 from game.forms import (
-    PlayerRegistrationForm,
-    RatingForm,
-    GameSearchForm,
     GameCreateForm,
-    PlayerUpdateForm,
+    GameSearchForm,
     GenreCreateForm,
+    PlayerRegistrationForm,
+    PlayerUpdateForm,
     PublisherCreateForm,
+    RatingForm,
 )
 from game.models import (
-    Player,
     Game,
-    Publisher,
     Genre,
-    Rating
+    Player,
+    Publisher,
+    Rating,
 )
 
 

@@ -1,16 +1,21 @@
 from unittest.mock import MagicMock
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import (
+    Client,
+    RequestFactory,
+    TestCase,
+)
 from django.urls import reverse
-from django.test import RequestFactory
+
 from game.models import (
-    Player,
     Genre,
     Platform,
-    Publisher
+    Player,
+    Publisher,
 )
-from game.views import PlayerUpdateView, PersonalPageView
+from game.views import PersonalPageView, PlayerUpdateView
 
 
 class PlayerUpdateViewTestCase(TestCase):

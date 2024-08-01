@@ -1,16 +1,17 @@
 from datetime import timedelta
-from django.utils import timezone
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import DateInput
+from django.utils import timezone
 
 from game.models import (
-    Player,
     Game,
-    Platform,
     Genre,
+    Platform,
+    Player,
     Publisher,
-    Rating
+    Rating,
 )
 
 

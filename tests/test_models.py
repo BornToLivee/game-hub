@@ -4,8 +4,8 @@ from django.test import TestCase
 from game.models import (
     Game,
     Genre,
+    Platform,
     Publisher,
-    Platform
 )
 
 

@@ -1,18 +1,20 @@
 from decimal import Decimal
+
 from django.contrib.auth import get_user_model
 from django.test import (
-    TestCase,
     Client,
-    RequestFactory
+    RequestFactory,
+    TestCase,
 )
 from django.urls import reverse
+
 from game.models import (
     Game,
     Genre,
     Platform,
-    Publisher,
     Player,
-    Rating
+    Publisher,
+    Rating,
 )
 
 

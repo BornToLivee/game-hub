@@ -1,16 +1,22 @@
 import shutil
 import tempfile
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest
-from django.test import TestCase, Client
+from django.test import Client, TestCase
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView
-from game.models import Genre, Publisher, Game
+
+from game.models import (
+    Game,
+    Genre,
+    Publisher,
+)
 from game.views import (
-    GenreListView,
+    GenreDeleteView,
     GenreDetailView,
-    GenreDeleteView
+    GenreListView,
 )
 from game_hub import settings
 

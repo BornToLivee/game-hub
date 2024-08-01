@@ -1,23 +1,25 @@
-from datetime import timedelta, date
+from datetime import date, timedelta
 from decimal import Decimal
-from django.utils import timezone
+
 from django import forms
 from django.test import TestCase
+from django.utils import timezone
+
 from game.forms import (
-    RatingForm,
     GameCreateForm,
     GameSearchForm,
+    GenreCreateForm,
     PlayerRegistrationForm,
     PlayerUpdateForm,
-    GenreCreateForm,
     PublisherCreateForm,
+    RatingForm,
 )
 from game.models import (
-    Rating,
-    Platform,
     Genre,
+    Platform,
+    Player,
     Publisher,
-    Player
+    Rating,
 )
 
 

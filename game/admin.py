@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Genre, Game, Publisher, Player, Platform
+
+from .models import (
+    Game,
+    Genre,
+    Platform,
+    Player,
+    Publisher,
+)
 
 
 @admin.register(Player)
