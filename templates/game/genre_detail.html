@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="genre-info p-4 border rounded shadow-sm mb-4">
+      <h1 class="text-center">{{ object.name }}</h1>
+      <p class="text-center">{{ object.description }}</p>
+    </div>
+
+    <div class="games-list p-4 border rounded shadow-sm mb-4">
+      <h2 class="text-center mb-4">Games in this Genre</h2>
+      <div class="row">
+        {% for game in games %}
+          <div class="col-md-6 mb-4">
+            <a href="{% url 'game:game-detail' pk=game.pk %}" class="game-link">
+              <div class="game-box p-4 border rounded shadow-sm text-center">
+                <h4>{{ game.title }}</h4>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="{% url 'game:genre-update' pk=genre.id %}" class="btn btn-warning btn-lg btn-block mb-2 btn-animated">Update
+        Information</a>
+      <a href="{% url 'game:genre-delete' pk=genre.id %}" class="btn btn-danger btn-lg btn-block btn-animated">Delete
+        Genre</a>
+    </div>
+    <link rel="stylesheet" href="{% static 'css/genre_detail.css' %}">
+  </div>
+{% endblock %}

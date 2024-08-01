@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Your Personal Game Hub</h1>
+    <p class="text-center">Welcome to Hub!</p>
+    <div class="row text-center justify-content-center">
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:personal-page' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Players</h3>
+            <p class="display-4">{{ num_players }}+</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:game-list' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Games</h3>
+            <p class="display-4">{{ num_games }}+</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:genre-list' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Genres</h3>
+            <p class="display-4">{{ num_genres }}+</p>
+          </div>
+        </a>
+      </div>
+      <div class="col-md-5 mb-4">
+        <a href="{% url 'game:publisher-list' %}" class="info-link">
+          <div class="info-box p-4 border rounded shadow-sm">
+            <h3>Publishers</h3>
+            <p class="display-4">{{ num_publishers }}+</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <link rel="stylesheet" href="{% static "css/index.css" %}">
+{% endblock %}

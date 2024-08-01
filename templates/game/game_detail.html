@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  <title>{{ game.title }} - Game details</title>
+{% endblock %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <div class="game-info p-4 mb-4 border rounded">
+          <h1>{{ game.title }}</h1>
+          <div class="game-image-container mb-3">
+            <img src="{{ game.image.url }}" alt="{{ game.title }}" class="game-image">
+          </div>
+          <p><strong>Release year:</strong> {{ game.release_year }}</p>
+          <p><strong>Description:</strong></p>
+          <p>{{ game.description }}</p>
+          <p><strong>Platforms:</strong>
+            {% for platform in game.platform.all %}
+              {{ platform.name }}{% if not forloop.last %} | {% endif %}
+            {% endfor %}
+          </p>
+        </div>
+
+        <div class="rating-section mb-4">
+          <h4>Average players rating:</h4>
+          <div id="average-rating">
+            {% for i in range %}
+              {% if i < average_rating %}
+                <i class="fas fa-star"></i>
+              {% else %}
+                <i class="far fa-star"></i>
+              {% endif %}
+            {% endfor %}
+            <p>{{ user_votes_count }} user{{ user_votes_count|pluralize }} voted</p>
+          </div>
+        </div>
+
+        {% if user.is_authenticated %}
+          <div class="user-rating-section mb-4">
+            <h4>Your score:</h4>
+            <div id="user-rating" data-score="{{ user_rating.score|default:0 }}">
+              {% for i in range %}
+                {% if i < user_rating.score %}
+                  <i class="fas fa-star" data-value="{{ i|add:1 }}"></i>
+                {% else %}
+                  <i class="far fa-star" data-value="{{ i|add:1 }}"></i>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <form method="post" id="rating-form" class="mt-3">
+              {% csrf_token %}
+              <input type="hidden" name="score" id="rating-score">
+              <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
+          </div>
+        {% else %}
+          <p>Only registered users can leave ratings.</p>
+        {% endif %}
+      </div>
+
+      <div class="col-md-4">
+        <div class="game-actions-box position-sticky p-3 border rounded"
+             style="right: 10rem; top: 10rem; width: 300px;">
+          <div class="mb-3 w-100">
+            <a href="{% url "game:game-update" game.id %}" class="btn btn-warning btn-block btn-animated custom-btn-lg">Update
+              information about game</a>
+          </div>
+          <form method="post" action="{% url 'game:update-wishlist-status' game.id %}" class="mb-1 w-100 ">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-block btn-animated custom-btn-lg">
+              {% if game in user.wishlist_games.all %}
+                Remove from wishlist
+              {% else %}
+                Add to wishlist
+              {% endif %}
+            </button>
+          </form>
+          <form method="post" action="{% url 'game:update-completed-status' game.id %}" class="mb-3 w-100">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-block btn-animated custom-btn-lg">
+              {% if game in user.completed_games.all %}
+                Remove from completed
+              {% else %}
+                Add to completed
+              {% endif %}
+            </button>
+          </form>
+          <div class="w-100">
+            <a href="{{ game.link }}/" class="btn btn-info btn-block btn-animated custom-btn-lg" target="_blank">View on
+              Steam</a>
+          </div>
+          <div class="mb-3 w-100">
+            <a href="{% url 'game:game-delete' game.id %}" class="btn btn-danger btn-block  custom-btn-lg">Delete
+              game</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <link rel="stylesheet" href="{% static 'css/game_details.css' %}">
+  <script src="{% static 'js/rating.js' %}"></script>
+{% endblock %}

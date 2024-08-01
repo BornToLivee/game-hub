@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Game List</h1>
+    <a href="{% url "game:game-create" %}" class="btn btn-primary">Add new game</a>
+  </div>
+  <form action="" method="get" class="form-inline mb-4">
+    {{ search_form|crispy }}
+    <button type="submit" class="btn btn-info ml-2">Search</button>
+  </form>
+  <form action="" method="get" class="form-inline mb-4">
+    <div class="form-group mr-3">
+      <label for="genre" class="mr-2">Genre:</label>
+      <select name="genre" id="genre" class="form-control">
+        <option value="">All</option>
+        {% for genre in genres %}
+          <option value="{{ genre.id }}"
+                  {% if selected_genre == genre.id|stringformat:"s" %}selected{% endif %}>{{ genre.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group mr-3">
+      <label for="publisher" class="mr-2">Publisher:</label>
+      <select name="publisher" id="publisher" class="form-control">
+        <option value="">All</option>
+        {% for publisher in publishers %}
+          <option value="{{ publisher.id }}"
+                  {% if selected_publisher == publisher.id|stringformat:"s" %}selected{% endif %}>{{ publisher.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+  </form>
+  <div class="row">
+    {% for game in game_list %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="{{ game.image.url }}" class="card-img-top" alt="{{ game.title }}"
+               style="height: 300px; object-fit: cover;">
+          <div class="card-body">
+            <h5 class="card-title mb-0">{{ game.title }}</h5>
+            <span class="text-muted">{{ game.release_year }}</span>
+            <a href="{% url "game:game-detail" pk=game.id %}"></a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-md-12">
+        <a href="{% url "game:game-create" %}">Can't find your game in the list? Add it to the website!</a>
+      </div>
+    {% endfor %}
+  </div>
+  <link rel="stylesheet" href="{% static 'css/game_list.css' %}">
+  <script src="{% static 'js/game_list.js' %}"></script>
+{% endblock %}
