@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="card p-4">
+      <p class="text-center mb-4">Are you sure you want to delete this game "{{ game.title }}"?</p>
+      <div class="text-center mb-4">
+        <a href="{% url 'game:game-update' pk=game.id %}" class="align-items-center">You can modify information about
+          it!</a>
+      </div>
+      <div class="d-flex justify-content-center">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="btn-group">
+            <input type="submit" value="Yes" class="btn btn-danger mr-2"/>
+            <a href="{% url 'game:game-detail' pk=game.id %}" class="btn btn-secondary">No</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
