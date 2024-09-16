@@ -15,7 +15,7 @@ Python3 must be already installed
 git clone https://github.com/BornToLivee/game-hub
 cd game-hub
 python3 -m venv venv
-source ven/bin/activate
+source venv/bin/activate
 pip install -r requirements.txt
 python manage.py runserver
 ```
